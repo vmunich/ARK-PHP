@@ -10,9 +10,9 @@ var transaction = ark.transaction.createTransaction(
     {% else %}
         null,
     {% endif %}
-    "{{ secret }}",
+    "{{ secret }}"
     {% if secondSecret %}
-    	"{{ secondSecret }}"
+    	,"{{ secondSecret }}"
     {% endif %}
 );
 

@@ -32,7 +32,7 @@ abstract class AbstractBuilder
     /** @var array */
     protected $networks = [
         '6e84d08bd299ed97c212c886c98a57e36545c8f5d645ca7eeae63a8bd62d8988' => "0x17",
-        '578e820911f24e039733b45e4882b73e301f813a0d2c31330dafda84534ffa23' => "0x30",
+        '578e820911f24e039733b45e4882b73e301f813a0d2c31330dafda84534ffa23' => "0x1E",
         'd1c7fa0dcf7584add7a535acd674d3b13fa794345d83c3789cc2436d6ecd80d1' => "0x52",
     ];
 
