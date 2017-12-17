@@ -3,7 +3,7 @@
 ## Initialize Client
 
 ```php
-$client = new BrianFaust\Ark\Client('your-node-ip', 4001, 'your-nethash', 'your-version', 'nucleid-arkjs-path');
+$client = new BrianFaust\Ark\Client('your-node-ip', 4001, 'your-nethash', 'your-version');
 ```
 
 ## Sending Requests
