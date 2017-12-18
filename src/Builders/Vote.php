@@ -24,7 +24,7 @@ class Vote extends AbstractBuilder
      *
      * @return \Illuminate\Support\Collection
      */
-    public function create(string $secret, string $delegate, string $secondSecret)
+    public function create(string $secret, string $delegate, ?string $secondSecret)
     {
         return $this->build(
             'vote.createVote',
@@ -41,7 +41,7 @@ class Vote extends AbstractBuilder
      *
      * @return \Illuminate\Support\Collection
      */
-    public function delete(string $secret, string $delegate, string $secondSecret)
+    public function delete(string $secret, string $delegate, ?string $secondSecret)
     {
         return $this->build(
             'vote.deleteVote',
