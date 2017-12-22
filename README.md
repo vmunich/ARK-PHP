@@ -1,25 +1,29 @@
-# ARK Python Client
+# Ark PHP Client
 
-Use at your own risk, this is currently under development.
+## Table of contents
 
-## Installation
+  * [Installation](docs/Installation.md)
+  * [Usage](docs/Usage.md)
+    * [Initialization](docs/Initialization.md)
+    * [Account](docs/Account.md)
+    * [Block](docs/Block.md)
+    * [Delegate](docs/Delegate.md)
+    * [Loader](docs/Loader.md)
+    * [MultiSignature](docs/MultiSignature.md)
+    * [Peer](docs/Peer.md)
+    * [Signature](docs/Signature.md)
+    * [Transaction](docs/Transaction.md)
+    * [Transport](docs/Transport.md)
+    * [Calculator](docs/Calculator.md)
+  * [Testing](#testing)
+  * [Security](#security)
+  * [Credits](#credits)
+  * [License](#license)
 
-```bash
-yarn add github:arkecosystem/ark-js#master
-pip3 install https://github.com/faustbrian/ARK-Python-Client
-```
+## Testing
 
-## Usage
-
-```python
-from park.park import Park
-
-park = Park(
-    '127.0.0.1', 4001,
-    '578e820911f24e039733b45e4882b73e301f813a0d2c31330dafda84534ffa23', '1.0.3'
-)
-
-transaction = park.transactions().create('address', 'amount', 'vendor', 'secret', 'second secret')
+``` bash
+$ phpunit
 ```
 
 ## Security

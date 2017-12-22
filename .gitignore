@@ -1,1 +1,3 @@
-__pycache__
+composer.lock
+phpunit.xml
+vendor
