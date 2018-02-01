@@ -48,4 +48,21 @@ class CryptoTest extends TestCase
         // Assert...
         $this->assertSame($result, $wif);
     }
+
+    /** @test */
+    public function test_address_generation()
+    {
+        $secret = 'this is a top secret passphrase';
+        $address = Crypto::getAddress(Crypto::getKeys($secret));
+        $this->assertSame($address, 'AGeYmgbg2LgGxRW2vNNJvQ88PknEJsYizC');
+    }
+
+    /** @test */
+    public function test_dark_net_address_generation()
+    {
+        Crypto::useDarkNet();
+        $secret = 'this is a top secret passphrase';
+        $address = Crypto::getAddress(Crypto::getKeys($secret));
+        $this->assertSame($address, 'D61mfSggzbvQgTUe6JhYKH2doHaqJ3Dyib');
+    }
 }

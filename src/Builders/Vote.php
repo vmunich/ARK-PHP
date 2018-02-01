@@ -24,12 +24,9 @@ class Vote extends AbstractBuilder
      *
      * @return \Illuminate\Support\Collection
      */
-    public function create(string $secret, string $delegate, ?string $secondSecret)
+    public function create(string $secret, array $delegates, ?string $secondSecret = null)
     {
-        return $this->build(
-            'vote.createVote',
-            compact('secret', 'delegate', 'secondSecret')
-        );
+        return Transaction::createVote($delegates, $secret, $secondSecret);
     }
 
     /**
@@ -41,11 +38,8 @@ class Vote extends AbstractBuilder
      *
      * @return \Illuminate\Support\Collection
      */
-    public function delete(string $secret, string $delegate, ?string $secondSecret)
+    public function delete(string $secret, array $delegates, ?string $secondSecret)
     {
-        return $this->build(
-            'vote.deleteVote',
-            compact('secret', 'delegate', 'secondSecret')
-        );
+        return Transaction::createVote($delegates, $secret, $secondSecret);
     }
 }

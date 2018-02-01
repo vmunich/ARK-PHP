@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace BrianFaust\Ark\Builders;
 
+use BrianFaust\Ark\Builders\Transaction;
+
 class MultiSignature extends AbstractBuilder
 {
     /**
@@ -28,9 +30,6 @@ class MultiSignature extends AbstractBuilder
      */
     public function create(string $secret, string $secondSecret, string $keysgroup, int $lifetime, int $min)
     {
-        return $this->build(
-            'multisignature.createMultisignature',
-            compact('secret', 'secondSecret', 'keysgroup', 'lifetime', 'min')
-        );
+        return Transaction::createMultiSignature($secret, $secondSecret, $keysgroup, $lifetime, $min);
     }
 }

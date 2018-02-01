@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace BrianFaust\Tests\Ark\Builders;
 
+use BrianFaust\Ark\Utils\Crypto;
 use BrianFaust\Tests\Ark\TestCase;
 
 /**
@@ -23,19 +24,35 @@ class TransactionTest extends TestCase
     /** @test */
     public function can_create_signed_transaction_object()
     {
-        // Skip...
-        $this->markTestSkipped('This requires secrets and will only be tested on local machines.');
-
         // Arrange...
-        $amount = 1 * 10 ** 8;
-        $recipientId = 'AdVSe37niA3uFUPgCgMUH2tMsHF4LpLoiX';
-        $vendorField = str_random(10);
-        $secret = env('ARK_TESTING_SECRET');
+        $amount = 133380000000;
+        $recipientId = 'AXoXnFi4z1Z6aFvjEYkDVCtBGW2PaRiM25';
+        $vendorField = 'This is a transaction from PHP';
+        $secret = 'this is a top secret passphrase';
 
         // Act...
-        $response = $this->getClient()->builder('Transaction')->create($recipientId, $amount, $vendorField, $secret);
+        $transaction = $this->getClient()->builder('Transaction')->create($recipientId, $amount, $vendorField, $secret);
 
         // Assert...
-        $this->assertInstanceOf('stdClass', $response);
+        $this->assertInstanceOf('stdClass', $transaction);
+
+        $this->assertTrue(Crypto::verify($transaction));
+    }
+
+    /** @test */
+    public function second_passphrase_verification()
+    {
+        $amount = 133380000000;
+        $recipientId = 'AXoXnFi4z1Z6aFvjEYkDVCtBGW2PaRiM25';
+        $vendorField = 'This is a transaction from PHP';
+        $secret = 'this is a top secret passphrase';
+        $secondSecret = 'this is a top secret second passphrase';
+
+        $transaction = $this->getClient()->builder('Transaction')->create($recipientId, $amount, $vendorField, $secret, $secondSecret);
+
+        $this->assertInstanceOf('stdClass', $transaction);
+
+        $this->assertTrue(Crypto::verify($transaction));
+        $this->assertTrue(Crypto::secondVerify($transaction, Crypto::getKeys($secondSecret)->getPublicKey()->getHex()));
     }
 }

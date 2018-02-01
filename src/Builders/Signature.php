@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace BrianFaust\Ark\Builders;
 
+use BrianFaust\Ark\Builders\Transaction;
+
 class Signature extends AbstractBuilder
 {
     /**
@@ -25,9 +27,6 @@ class Signature extends AbstractBuilder
      */
     public function create(string $secret, string $secondSecret)
     {
-        return $this->build(
-            'signature.createSignature',
-            compact('secret', 'secondSecret')
-        );
+        return Transaction::createSecondSignature($secondSecret, $secret);
     }
 }

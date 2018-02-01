@@ -14,10 +14,8 @@ declare(strict_types=1);
 namespace BrianFaust\Tests\Ark\Builders;
 
 use BrianFaust\Tests\Ark\TestCase;
+use BrianFaust\Ark\Utils\Crypto;
 
-/**
- * @coversNothing
- */
 class DelegateTest extends TestCase
 {
     /** @test */
@@ -36,5 +34,15 @@ class DelegateTest extends TestCase
 
         // Assert...
         $this->assertInstanceOf('stdClass', $response);
+    }
+
+    /** @test */
+    public function can_create_add_delegate_transaction()
+    {
+        $secret = 'this is a top secret passphrase';
+        $name = 'polopolo';
+
+        $transaction = $this->getClient()->builder('Delegate')->create($secret, $name);
+        $this->assertTrue(Crypto::verify($transaction));
     }
 }

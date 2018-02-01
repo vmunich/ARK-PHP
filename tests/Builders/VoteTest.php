@@ -14,10 +14,8 @@ declare(strict_types=1);
 namespace BrianFaust\Tests\Ark\Builders;
 
 use BrianFaust\Tests\Ark\TestCase;
+use BrianFaust\Ark\Utils\Crypto;
 
-/**
- * @coversNothing
- */
 class VoteTest extends TestCase
 {
     /** @test */
@@ -54,5 +52,15 @@ class VoteTest extends TestCase
 
         // Assert...
         $this->assertInstanceOf('stdClass', $response);
+    }
+
+    /** @test */
+    public function can_create_vote_transaction()
+    {
+        $secret = 'this is a top secret passphrase';
+        $delegate = '034151a3ec46b5670a682b0a63394f863587d1bc97483b1b6c70eb58e7f0aed192';
+
+        $transaction = $this->getClient()->builder('Vote')->create($secret, ['+' . $delegate]);
+        $this->assertTrue(Crypto::verify($transaction));
     }
 }

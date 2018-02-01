@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace BrianFaust\Ark\Builders;
 
-use Twig_Environment;
-use Twig_Loader_Filesystem;
 use UnexpectedValueException;
 
 abstract class AbstractBuilder
@@ -23,11 +21,6 @@ abstract class AbstractBuilder
      * @var string
      */
     protected $nethash;
-
-    /**
-     * @var \Twig_Environment
-     */
-    protected $engine;
 
     /** @var array */
     protected $networks = [
@@ -41,8 +34,6 @@ abstract class AbstractBuilder
     public function __construct(string $nethash)
     {
         $this->nethash = $nethash;
-
-        $this->engine = new Twig_Environment(new Twig_Loader_Filesystem(__DIR__.'/templates'));
     }
 
     /**

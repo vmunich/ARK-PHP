@@ -14,10 +14,9 @@ declare(strict_types=1);
 namespace BrianFaust\Tests\Ark\Builders;
 
 use BrianFaust\Tests\Ark\TestCase;
+use BrianFaust\Ark\Utils\Crypto;
+use BrianFaust\Ark\Builders\Transaction;
 
-/**
- * @coversNothing
- */
 class SignatureTest extends TestCase
 {
     /** @test */
@@ -35,5 +34,17 @@ class SignatureTest extends TestCase
 
         // Assert...
         $this->assertInstanceOf('stdClass', $response);
+    }
+
+    /** @test */
+    public function creates_valid_second_signature_transaction()
+    {
+        $firstSecret = 'first passphrase';
+        $secondSecret = 'second passphrase';
+
+        $transaction = Transaction::createSecondSignature($secondSecret, $firstSecret);
+        $this->assertTrue(Crypto::verify($transaction));
+        $this->assertNull($transaction->signSignature);
+        $this->assertEquals($transaction->asset['signature']['publicKey'], Crypto::getKeys($secondSecret)->getPublicKey()->getHex());
     }
 }

@@ -13,6 +13,10 @@ declare(strict_types=1);
 
 namespace BrianFaust\Ark\Builders;
 
+use BitWasp\Buffertools\Buffer;
+use BrianFaust\Ark\Utils\Crypto;
+use BitWasp\Bitcoin\Crypto\Hash;
+
 class Transaction extends AbstractBuilder
 {
     /**
@@ -28,9 +32,226 @@ class Transaction extends AbstractBuilder
      */
     public function create(string $recipientId, int $amount, string $vendorField, string $secret, ?string $secondSecret = null)
     {
-        return $this->build(
-            'transaction.createTransaction',
-            compact('recipientId', 'amount', 'vendorField', 'secret', 'secondSecret')
+        $transaction = Transaction::createEmptyTransaction();
+        $transaction->recipientId = $recipientId;
+        $transaction->type = 0;
+        $transaction->amount = $amount;
+        $transaction->fee = 10000000;
+        $transaction->vendorField = $vendorField;
+        $transaction->timestamp = Transaction::getTimeSinceEpoch();
+
+        $keys = Crypto::getKeys($secret);
+        $transaction->senderPublicKey = $keys->getPublicKey()->getHex();
+
+        Transaction::sign($transaction, $keys);
+
+        if ($secondSecret)
+        {
+            $secondKeys = Crypto::getKeys($secondSecret);
+            Transaction::secondSign($transaction, $secondKeys);
+        }
+
+        $idBytes = Transaction::getBytes($transaction, false, false);
+        $transaction->id = Hash::sha256(new Buffer($idBytes))->getHex();
+
+        if (!$transaction->signSignature) {
+            unset($transaction->signSignature);
+        }
+        unset($transaction->asset);
+
+        return $transaction;
+    }
+
+    public static function createSecondSignature($secondPassphrase, $firstPassphrase)
+    {
+        $transaction = self::createEmptyTransaction();
+        $transaction->type = 1;
+        $transaction->amount = 0;
+        $transaction->fee = 500000000;
+        $transaction->asset['signature'] = array('publicKey' => Crypto::getKeys($secondPassphrase)->getPublicKey()->getHex());
+        $transaction->timestamp = self::getTimeSinceEpoch();
+
+        $firstPassphraseKeys = Crypto::getKeys($firstPassphrase);
+        $transaction->senderPublicKey = $firstPassphraseKeys->getPublicKey()->getHex();
+        self::sign($transaction, $firstPassphraseKeys);
+        return $transaction;
+    }
+
+    public static function createVote($votes, $secret, $secondSecret)
+    {
+        $transaction = self::createEmptyTransaction();
+        $transaction->type = 3;
+        $transaction->amount = 0;
+        $transaction->fee = 100000000;
+
+        $transaction->asset['votes'] = $votes;
+        $transaction->recipientId = Crypto::getAddress(Crypto::getKeys($secret));
+        $transaction->timestamp = self::getTimeSinceEpoch();
+
+        $keys = Crypto::getKeys($secret);
+        $transaction->senderPublicKey = $keys->getPublicKey()->getHex();
+        Transaction::sign($transaction, $keys);
+
+        if ($secondSecret)
+        {
+            $secondKeys = Crypto::getKeys($secondSecret);
+            Transaction::secondSign($transaction, $secondKeys);
+        }
+        $idBytes = Transaction::getBytes($transaction, false, false);
+        $transaction->id = Hash::sha256(new Buffer($idBytes))->getHex();
+
+        return $transaction;
+    }
+
+    public static function createDelegate($username, $secret, $secondSecret)
+    {
+        $transaction = self::createEmptyTransaction();
+        $transaction->type = 2;
+        $transaction->amount = 0;
+        $transaction->fee = 2500000000;
+        $transaction->timestamp = self::getTimeSinceEpoch();
+
+        $keys = Crypto::getKeys($secret);
+        $transaction->senderPublicKey = $keys->getPublicKey()->getHex();
+
+        $transaction->asset['delegate'] = array(
+            'username' => $username,
+            'publicKey' => $transaction->senderPublicKey
         );
+
+        Transaction::sign($transaction, $keys);
+
+        if ($secondSecret)
+        {
+            $secondKeys = Crypto::getKeys($secondSecret);
+            Transaction::secondSign($transaction, $secondKeys);
+        }
+        $idBytes = Transaction::getBytes($transaction, false, false);
+        $transaction->id = Hash::sha256(new Buffer($idBytes))->getHex();
+
+        return $transaction;
+    }
+
+    public static function createMultiSignature(string $secret, string $secondSecret, string $keysgroup, int $lifetime, int $min)
+    {
+        $transaction = self::createEmptyTransaction();
+        $transaction->type = 4;
+        $transaction->amount = 0;
+        $transaction->fee = 500000000;
+        $transaction->timestamp = self::getTimeSinceEpoch();
+        $transaction->asset['multisignature'] = array(
+            'min' => $min,
+            'lifetime' => $lifetime,
+            'keysgroup' => $keysgroup
+        );
+
+        $keys = Crypto::getKeys($secret);
+        $transaction->senderPublicKey = $keys->getPublicKey()->getHex();
+        Transaction::sign($transaction, $keys);
+
+        if ($secondSecret)
+        {
+            $secondKeys = Crypto::getKeys($secondSecret);
+            Transaction::secondSign($transaction, $secondKeys);
+        }
+        $idBytes = Transaction::getBytes($transaction, false, false);
+        $transaction->id = Hash::sha256(new Buffer($idBytes))->getHex();
+
+        return $transaction;
+    }
+
+    private static function createEmptyTransaction()
+    {
+        $out = new \stdClass();
+        $out->recipientId = null;
+        $out->type = null;
+        $out->amount = null;
+        $out->fee = null;
+        $out->vendorField = null;
+        $out->timestamp = null;
+
+        $out->senderPublicKey = null;
+
+        $out->signature = null;
+        $out->signSignature = null;
+
+        $out->id = null;
+        $out->asset = array();
+        return $out;
+    }
+
+    public static function getBytes($transaction, $skipSignature = true, $skipSecondSignature = true)
+    {
+        $out = '';
+        $out .= pack('h', $transaction->type);
+        $out .= pack('V', $transaction->timestamp);
+        $out .= pack('H' . strlen($transaction->senderPublicKey), $transaction->senderPublicKey);
+
+        # TODO: requester public key
+
+        if ($transaction->recipientId)
+        {
+            $out .= \BitWasp\Bitcoin\Base58::decodeCheck($transaction->recipientId)->getBinary();
+        } else
+        {
+            $out .= pack('x21');
+        }
+
+        if ($transaction->vendorField && strlen($transaction->vendorField) < 64)
+        {
+            $out .= $transaction->vendorField;
+            $vendorFieldLength = strlen($transaction->vendorField);
+            if ($vendorFieldLength < 64)
+            {
+                $out .= pack('x' . (64 - $vendorFieldLength));
+            }
+        } else {
+            $out .= pack('x64');
+        }
+
+        $out .= pack('P', $transaction->amount);
+        $out .= pack('P', $transaction->fee);
+
+        if ($transaction->type == 1) // second signature
+        {
+            $assetSigPubKey = $transaction->asset['signature']['publicKey'];
+            $out .= pack('H' . strlen($assetSigPubKey), $assetSigPubKey);
+        } elseif ($transaction->type == 2)
+        {
+            $out .= $transaction->asset['delegate']['username'];
+        } elseif ($transaction->type == 3)
+        {
+            $out .= join('', $transaction->asset['votes']);
+        } elseif ($transaction->type == 4)
+        {
+            $out .= pack('C', $transaction->asset['multisignature']['min']);
+            $out .= pack('C', $transaction->asset['multisignature']['lifetime']);
+            $out .= $transaction->asset['multisignature']['keysgroup'];
+        }
+
+        if(!$skipSignature && $transaction->signature){
+            $out .= pack('H' . strlen($transaction->signature), $transaction->signature);
+        }
+        if(!$skipSecondSignature && $transaction->signSignature){
+            $out .= pack('H' . strlen($transaction->signSignature), $transaction->signSignature);
+        }
+        return $out;
+    }
+
+    private static function sign($transaction, $keys)
+    {
+        $txBytes = Transaction::getBytes($transaction);
+        $transaction->signature = $keys->sign(Hash::sha256(new Buffer($txBytes)))->getBuffer()->getHex();
+    }
+
+    private static function secondSign($transaction, $keys)
+    {
+        $txBytes = Transaction::getBytes($transaction, false);
+        $transaction->signSignature = $keys->sign(Hash::sha256(new Buffer($txBytes)))->getBuffer()->getHex();
+    }
+
+    private static function getTimeSinceEpoch()
+    {
+        return time() - strtotime("2017-03-21 13:00:00");
     }
 }

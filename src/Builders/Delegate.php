@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace BrianFaust\Ark\Builders;
 
+use BrianFaust\Ark\Builders\Transaction;
+
 class Delegate extends AbstractBuilder
 {
     /**
@@ -24,11 +26,8 @@ class Delegate extends AbstractBuilder
      *
      * @return \Illuminate\Support\Collection
      */
-    public function create(string $secret, string $username, string $secondSecret)
+    public function create(string $secret, string $username, string $secondSecret = null)
     {
-        return $this->build(
-            'delegate.createDelegate',
-            compact('secret', 'username', 'secondSecret')
-        );
+        return Transaction::createDelegate($username, $secret, $secondSecret);
     }
 }

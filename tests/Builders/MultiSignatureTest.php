@@ -14,10 +14,8 @@ declare(strict_types=1);
 namespace BrianFaust\Tests\Ark\Builders;
 
 use BrianFaust\Tests\Ark\TestCase;
+use BrianFaust\Ark\Utils\Crypto;
 
-/**
- * @coversNothing
- */
 class MultiSignatureTest extends TestCase
 {
     /** @test */
@@ -38,5 +36,22 @@ class MultiSignatureTest extends TestCase
 
         // Assert...
         $this->assertInstanceOf('stdClass', $response);
+    }
+
+    /** @test */
+    public function can_create_multisignature_transaction()
+    {
+        $secret = 'secret';
+        $secondSecret = 'second secret';
+        $min = 2;
+        $lifetime = 255;
+        $keysgroup = [
+            "03a02b9d5fdd1307c2ee4652ba54d492d1fd11a7d1bb3f3a44c4a05e79f19de933",
+            "13a02b9d5fdd1307c2ee4652ba54d492d1fd11a7d1bb3f3a44c4a05e79f19de933",
+            "23a02b9d5fdd1307c2ee4652ba54d492d1fd11a7d1bb3f3a44c4a05e79f19de933"
+        ];
+
+        $transaction = $this->getClient()->builder('MultiSignature')->create($secret, $secondSecret, join('', $keysgroup), $lifetime, $min);
+        $this->assertTrue(Crypto::verify($transaction));
     }
 }

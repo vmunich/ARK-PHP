@@ -24,13 +24,13 @@ class Vote extends AbstractAPI
      *
      * @return \Illuminate\Support\Collection
      */
-    public function vote(string $secret, array $delegate, ?string $secondSecret = null): Collection
+    public function vote(string $secret, array $delegates, ?string $secondSecret = null): Collection
     {
         return $this->post('peer/transactions', [
             'transactions' => [
                 $this->client->builder('Vote')->create(
                     $secret,
-                    $delegate,
+                    $delegates,
                     $secondSecret
                 )
             ]
@@ -44,13 +44,13 @@ class Vote extends AbstractAPI
      *
      * @return \Illuminate\Support\Collection
      */
-    public function unvote(string $secret, array $delegate, ?string $secondSecret = null): Collection
+    public function unvote(string $secret, array $delegates, ?string $secondSecret = null): Collection
     {
         return $this->post('peer/transactions', [
             'transactions' => [
                 $this->client->builder('Vote')->delete(
                     $secret,
-                    $delegate,
+                    $delegates,
                     $secondSecret
                 )
             ]
