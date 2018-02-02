@@ -1,6 +1,6 @@
 {
     "name": "faustbrian/ark-php",
-    "description": "An Ark bridge for PHP.",
+    "description": "A PHP bridge for ARK.",
     "keywords": ["api", "ark", "crypto", "currency"],
     "license": "MIT",
     "authors": [{
