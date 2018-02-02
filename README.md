@@ -4,6 +4,8 @@
     <img src="https://github.com/faustbrian/ARK-PHP/blob/master/banner.png" />
 </p>
 
+> A [PHP](https://php.net/) bridge for ARK.
+
 # To-Do
 
 - Implement a Crypto Class with [Sodium](http://php.net/manual/de/book.sodium.php) for any signing related tasks. This requires PHP 7.2 or higher.
