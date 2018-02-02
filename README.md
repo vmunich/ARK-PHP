@@ -1,4 +1,4 @@
-# Ark PHP Client
+# ARK PHP
 
 <p align="center">
     <img src="https://github.com/faustbrian/ARK-PHP/blob/master/banner.png" />
