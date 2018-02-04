@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace BrianFaust\Tests\Ark\API;
 
 use BrianFaust\Tests\Ark\TestCase;
+use InvalidArgumentException;
 
 /**
  * @coversNothing
@@ -54,5 +55,19 @@ class VoteTest extends TestCase
 
         // Assert...
         $this->assertInstanceOf('Illuminate\Support\Collection', $response);
+    }
+
+    /** @test */
+    public function delegate_vote_argument_error()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->getClient()->api('Vote')->vote('some secret', ['too', 'many', 'delegates']);
+    }
+
+    /** @test */
+    public function delegate_unvote_argument_error()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->getClient()->api('Vote')->unvote('some secret', ['too', 'many', 'delegates']);
     }
 }

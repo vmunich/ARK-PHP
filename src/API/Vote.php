@@ -14,38 +14,63 @@ declare(strict_types=1);
 namespace BrianFaust\Ark\API;
 
 use Illuminate\Support\Collection;
+use InvalidArgumentException;
 
 class Vote extends AbstractAPI
 {
     /**
      * @param string $secret
-     * @param string $delegate
+     * @param array $delegate
      * @param string $secondSecret
      *
      * @return \Illuminate\Support\Collection
      */
-    public function vote(string $secret, array $delegates, ?string $secondSecret = null): Collection
+    public function vote(string $secret, array $delegate, ?string $secondSecret = null): Collection
     {
+        $this->raiseIfInvalidDelegate($delegate);
+
+        $delegate = $this->formatDelegate($delegate, '+');
         return $this->post('peer/transactions', [
             'transactions' => [
-                $this->client->transactionBuilder->createVote($delegates, $secret, $secondSecret, $this->client->network)
+                $this->client->transactionBuilder->createVote($delegate, $secret, $secondSecret, $this->client->network)
             ]
         ]);
     }
 
     /**
      * @param string $secret
-     * @param string $delegate
+     * @param array $delegate
      * @param string $secondSecret
      *
      * @return \Illuminate\Support\Collection
      */
-    public function unvote(string $secret, array $delegates, ?string $secondSecret = null): Collection
+    public function unvote(string $secret, array $delegate, ?string $secondSecret = null): Collection
     {
+        $this->raiseIfInvalidDelegate($delegate);
+
+        $delegate = $this->formatDelegate($delegate, '-');
         return $this->post('peer/transactions', [
             'transactions' => [
-                $this->client->transactionBuilder->createVote($delegates, $secret, $secondSecret, $this->client->network)
+                $this->client->transactionBuilder->createVote($delegate, $secret, $secondSecret, $this->client->network)
             ]
         ]);
+    }
+
+    private function raiseIfInvalidDelegate($delegate) {
+        if (count($delegate) != 1)
+        {
+            throw new InvalidArgumentException('$delegate must be an array of one delegate address');
+        }
+    }
+
+    private function formatDelegate(array $delegate, string $prependCharacter)
+    {
+        $address = $delegate[0];
+
+        if (substr($address, 0, 1) != $prependCharacter) {
+             return [$prependCharacter . $address];
+        }
+
+        return $delegate;
     }
 }

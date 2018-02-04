@@ -103,35 +103,26 @@ class Delegate extends AbstractAPI
 
     /**
      * @param string $secret
-     * @param string $delegates
+     * @param array $delegate
      * @param string $secondSecret
      *
      * @return \Illuminate\Support\Collection
      */
-    public function vote(string $secret, array $delegates, ?string $secondSecret = null): Collection
+    public function vote(string $secret, array $delegate, ?string $secondSecret = null): Collection
     {
-
-        return $this->post('peer/transactions', [
-            'transactions' => [
-                $this->client->transactionBuilder->createVote($delegates, $secret, $secondSecret, $this->client->network)
-            ]
-        ]);
+        return $this->client->api('Vote')->vote($secret, $delegate, $secondSecret);
     }
 
     /**
      * @param string $secret
-     * @param string $delegates
+     * @param array $delegate
      * @param string $secondSecret
      *
      * @return \Illuminate\Support\Collection
      */
-    public function unvote(string $secret, array $delegates, ?string $secondSecret = null): Collection
+    public function unvote(string $secret, array $delegate, ?string $secondSecret = null): Collection
     {
-        return $this->post('peer/transactions', [
-            'transactions' => [
-                $this->client->transactionBuilder->createVote($delegates, $secret, $secondSecret, $this->client->network)
-            ]
-        ]);
+        return $this->client->api('Vote')->unvote($secret, $delegate, $secondSecret);
     }
 
     /**
