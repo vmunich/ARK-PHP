@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace BrianFaust\Tests\Ark\Builders;
 
+use BrianFaust\Ark\Builders\Transaction;
 use BrianFaust\Ark\Utils\Crypto;
 use BrianFaust\Tests\Ark\TestCase;
 
@@ -54,5 +55,59 @@ class TransactionTest extends TestCase
 
         $this->assertTrue(Crypto::verify($transaction));
         $this->assertTrue(Crypto::secondVerify($transaction, Crypto::getKeys($secondSecret)->getPublicKey()->getHex()));
+    }
+
+    /** @test */
+    public function can_create_add_delegate_transaction()
+    {
+        $secret = 'this is a top secret passphrase';
+        $name = 'polopolo';
+
+        $transaction = Transaction::createDelegate($name, $secret);
+        $this->assertTrue(Crypto::verify($transaction));
+    }
+
+    /** @test */
+    public function can_create_multisignature_transaction()
+    {
+        $secret = 'secret';
+        $secondSecret = 'second secret';
+        $min = 2;
+        $lifetime = 255;
+        $keysgroup = [
+            "03a02b9d5fdd1307c2ee4652ba54d492d1fd11a7d1bb3f3a44c4a05e79f19de933",
+            "13a02b9d5fdd1307c2ee4652ba54d492d1fd11a7d1bb3f3a44c4a05e79f19de933",
+            "23a02b9d5fdd1307c2ee4652ba54d492d1fd11a7d1bb3f3a44c4a05e79f19de933"
+        ];
+
+        $transaction = Transaction::createMultiSignature($secret, $secondSecret, join('', $keysgroup), $lifetime, $min);
+        $this->assertInstanceOf('stdClass', $transaction);
+        $this->assertTrue(Crypto::verify($transaction));
+    }
+
+    /** @test */
+    public function creates_valid_second_signature_transaction()
+    {
+        $firstSecret = 'first passphrase';
+        $secondSecret = 'second passphrase';
+
+        $transaction = Transaction::createSecondSignature($secondSecret, $firstSecret);
+
+        $this->assertInstanceOf('stdClass', $transaction);
+
+        $this->assertTrue(Crypto::verify($transaction));
+        $this->assertNull($transaction->signSignature);
+        $this->assertEquals($transaction->asset['signature']['publicKey'], Crypto::getKeys($secondSecret)->getPublicKey()->getHex());
+    }
+
+    /** @test */
+    public function can_create_vote_transaction()
+    {
+        $secret = 'this is a top secret passphrase';
+        $delegate = '034151a3ec46b5670a682b0a63394f863587d1bc97483b1b6c70eb58e7f0aed192';
+
+        $transaction = Transaction::createVote(['+' . $delegate], $secret,null,  $this->getClient('17')->network);
+        $this->assertInstanceOf('stdClass', $transaction);
+        $this->assertTrue(Crypto::verify($transaction));
     }
 }

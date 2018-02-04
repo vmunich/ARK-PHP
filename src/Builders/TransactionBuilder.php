@@ -35,7 +35,7 @@ class TransactionFee
     const MULTISIGNATURE = 500000000;
 }
 
-class Transaction extends AbstractBuilder
+class TransactionBuilder
 {
     /**
      * Create a new signed transaction object.
@@ -48,28 +48,28 @@ class Transaction extends AbstractBuilder
      *
      * @return \Illuminate\Support\Collection
      */
-    public function create(string $recipientId, int $amount, string $vendorField, string $secret, ?string $secondSecret = null)
+    public static function createNormal(string $recipientId, int $amount, string $vendorField, string $secret, ?string $secondSecret = null)
     {
-        $transaction = Transaction::createEmptyTransaction();
+        $transaction = self::createEmptyTransaction();
         $transaction->recipientId = $recipientId;
         $transaction->type = TransactionType::NORMAL;
         $transaction->amount = $amount;
         $transaction->fee = TransactionFee::NORMAL;
         $transaction->vendorField = $vendorField;
-        $transaction->timestamp = Transaction::getTimeSinceEpoch();
+        $transaction->timestamp = self::getTimeSinceEpoch();
 
         $keys = Crypto::getKeys($secret);
         $transaction->senderPublicKey = $keys->getPublicKey()->getHex();
 
-        Transaction::sign($transaction, $keys);
+        self::sign($transaction, $keys);
 
         if ($secondSecret)
         {
             $secondKeys = Crypto::getKeys($secondSecret);
-            Transaction::secondSign($transaction, $secondKeys);
+            self::secondSign($transaction, $secondKeys);
         }
 
-        $idBytes = Transaction::getBytes($transaction, false, false);
+        $idBytes = self::getBytes($transaction, false, false);
         $transaction->id = Hash::sha256(new Buffer($idBytes))->getHex();
 
         if (!$transaction->signSignature) {
@@ -108,20 +108,20 @@ class Transaction extends AbstractBuilder
 
         $keys = Crypto::getKeys($secret);
         $transaction->senderPublicKey = $keys->getPublicKey()->getHex();
-        Transaction::sign($transaction, $keys);
+        self::sign($transaction, $keys);
 
         if ($secondSecret)
         {
             $secondKeys = Crypto::getKeys($secondSecret);
-            Transaction::secondSign($transaction, $secondKeys);
+            self::secondSign($transaction, $secondKeys);
         }
-        $idBytes = Transaction::getBytes($transaction, false, false);
+        $idBytes = self::getBytes($transaction, false, false);
         $transaction->id = Hash::sha256(new Buffer($idBytes))->getHex();
 
         return $transaction;
     }
 
-    public static function createDelegate($username, $secret, $secondSecret)
+    public static function createDelegate($username, $secret, $secondSecret = null)
     {
         $transaction = self::createEmptyTransaction();
         $transaction->type = TransactionType::DELEGATE;
@@ -137,14 +137,14 @@ class Transaction extends AbstractBuilder
             'publicKey' => $transaction->senderPublicKey
         );
 
-        Transaction::sign($transaction, $keys);
+        self::sign($transaction, $keys);
 
         if ($secondSecret)
         {
             $secondKeys = Crypto::getKeys($secondSecret);
-            Transaction::secondSign($transaction, $secondKeys);
+            self::secondSign($transaction, $secondKeys);
         }
-        $idBytes = Transaction::getBytes($transaction, false, false);
+        $idBytes = self::getBytes($transaction, false, false);
         $transaction->id = Hash::sha256(new Buffer($idBytes))->getHex();
 
         return $transaction;
@@ -165,14 +165,14 @@ class Transaction extends AbstractBuilder
 
         $keys = Crypto::getKeys($secret);
         $transaction->senderPublicKey = $keys->getPublicKey()->getHex();
-        Transaction::sign($transaction, $keys);
+        self::sign($transaction, $keys);
 
         if ($secondSecret)
         {
             $secondKeys = Crypto::getKeys($secondSecret);
-            Transaction::secondSign($transaction, $secondKeys);
+            self::secondSign($transaction, $secondKeys);
         }
-        $idBytes = Transaction::getBytes($transaction, false, false);
+        $idBytes = self::getBytes($transaction, false, false);
         $transaction->id = Hash::sha256(new Buffer($idBytes))->getHex();
 
         return $transaction;
@@ -258,13 +258,13 @@ class Transaction extends AbstractBuilder
 
     private static function sign($transaction, $keys)
     {
-        $txBytes = Transaction::getBytes($transaction);
+        $txBytes = self::getBytes($transaction);
         $transaction->signature = $keys->sign(Hash::sha256(new Buffer($txBytes)))->getBuffer()->getHex();
     }
 
     private static function secondSign($transaction, $keys)
     {
-        $txBytes = Transaction::getBytes($transaction, false);
+        $txBytes = self::getBytes($transaction, false);
         $transaction->signSignature = $keys->sign(Hash::sha256(new Buffer($txBytes)))->getBuffer()->getHex();
     }
 

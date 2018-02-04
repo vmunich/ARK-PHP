@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace BrianFaust\Ark\API;
 
 use Illuminate\Support\Collection;
+use BrianFaust\Ark\Builders\TransactionBuilder;
 
 class Signature extends AbstractAPI
 {
@@ -39,7 +40,7 @@ class Signature extends AbstractAPI
     {
         return $this->post('peer/transactions', [
             'transactions' => [
-                $this->client->builder('Signature')->create($secret, $secondSecret)
+                TransactionBuilder::createSecondSignature($secondSecret, $secret)
             ]
         ]);
     }

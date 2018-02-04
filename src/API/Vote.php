@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace BrianFaust\Ark\API;
 
 use Illuminate\Support\Collection;
+use BrianFaust\Ark\Builders\TransactionBuilder;
 
 class Vote extends AbstractAPI
 {
@@ -28,12 +29,7 @@ class Vote extends AbstractAPI
     {
         return $this->post('peer/transactions', [
             'transactions' => [
-                $this->client->builder('Vote')->create(
-                    $secret,
-                    $delegates,
-                    $secondSecret,
-                    $this->client->network
-                )
+                TransactionBuilder::createVote($delegates, $secret, $secondSecret, $this->client->network)
             ]
         ]);
     }
@@ -49,12 +45,7 @@ class Vote extends AbstractAPI
     {
         return $this->post('peer/transactions', [
             'transactions' => [
-                $this->client->builder('Vote')->delete(
-                    $secret,
-                    $delegates,
-                    $secondSecret,
-                    $this->client->network
-                )
+                TransactionBuilder::createVote($delegates, $secret, $secondSecret, $this->client->network)
             ]
         ]);
     }

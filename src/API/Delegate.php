@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace BrianFaust\Ark\API;
 
 use Illuminate\Support\Collection;
+use BrianFaust\Ark\Builders\TransactionBuilder;
 
 class Delegate extends AbstractAPI
 {
@@ -96,11 +97,7 @@ class Delegate extends AbstractAPI
     {
         return $this->post('peer/transactions', [
             'transactions' => [
-                $this->client->builder('Delegate')->create(
-                    $secret,
-                    $username,
-                    $secondSecret
-                )
+                TransactionBuilder::createDelegate($username, $secret, $secondSecret)
             ]
         ]);
     }
@@ -112,15 +109,11 @@ class Delegate extends AbstractAPI
      *
      * @return \Illuminate\Support\Collection
      */
-    public function vote(string $secret, array $delegate, ?string $secondSecret = null): Collection
+    public function vote(string $secret, array $delegates, ?string $secondSecret = null): Collection
     {
         return $this->post('peer/transactions', [
             'transactions' => [
-                $this->client->builder('Vote')->create(
-                    $secret,
-                    $delegate,
-                    $secondSecret
-                )
+                TransactionBuilder::createVote($delegates, $secret, $secondSecret, $this->client->network)
             ]
         ]);
     }
@@ -132,15 +125,11 @@ class Delegate extends AbstractAPI
      *
      * @return \Illuminate\Support\Collection
      */
-    public function unvote(string $secret, array $delegate, ?string $secondSecret = null): Collection
+    public function unvote(string $secret, array $delegates, ?string $secondSecret = null): Collection
     {
         return $this->post('peer/transactions', [
             'transactions' => [
-                $this->client->builder('Vote')->delete(
-                    $secret,
-                    $delegate,
-                    $secondSecret
-                )
+                TransactionBuilder::createVote($delegates, $secret, $secondSecret, $this->client->network)
             ]
         ]);
     }

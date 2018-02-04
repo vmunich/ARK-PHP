@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace BrianFaust\Ark\API;
 
 use Illuminate\Support\Collection;
+use BrianFaust\Ark\Builders\TransactionBuilder;
 
 class Transaction extends AbstractAPI
 {
@@ -80,13 +81,7 @@ class Transaction extends AbstractAPI
     {
         return $this->post('peer/transactions', [
             'transactions' => [
-                $this->client->builder('Transaction')->create(
-                    $recipientId,
-                    $amount,
-                    $vendorField,
-                    $secret,
-                    $secondSecret
-                )
+                TransactionBuilder::createNormal($recipientId, $amount, $vendorField, $secret, $secondSecret)
             ]
         ]);
     }
