@@ -155,8 +155,8 @@ class TransactionBuilder
     {
         $transaction = self::createEmptyTransaction();
         $transaction->type = TransactionType::MULTISIGNATURE;
-        $transaction->AMOUNT = 0;
-        $transaction->FEE = TransactionFee::MULTISIGNATURE;
+        $transaction->amount = 0;
+        $transaction->fee = TransactionFee::MULTISIGNATURE;
         $transaction->timestamp = self::getTimeSinceEpoch();
         $transaction->asset['multisignature'] = array(
             'min' => $min,
