@@ -17,6 +17,24 @@ use BitWasp\Buffertools\Buffer;
 use BrianFaust\Ark\Utils\Crypto;
 use BitWasp\Bitcoin\Crypto\Hash;
 
+class TransactionType
+{
+    const NORMAL = 0;
+    const SECONDSIGNATURE = 1;
+    const DELEGATE = 2;
+    const VOTE = 3;
+    const MULTISIGNATURE = 4;
+}
+
+class TransactionFee
+{
+    const NORMAL = 10000000;
+    const SECONDSIGNATURE = 500000000;
+    const DELEGATE = 2500000000;
+    const VOTE = 100000000;
+    const MULTISIGNATURE = 500000000;
+}
+
 class Transaction extends AbstractBuilder
 {
     /**
@@ -34,9 +52,9 @@ class Transaction extends AbstractBuilder
     {
         $transaction = Transaction::createEmptyTransaction();
         $transaction->recipientId = $recipientId;
-        $transaction->type = 0;
+        $transaction->type = TransactionType::NORMAL;
         $transaction->amount = $amount;
-        $transaction->fee = 10000000;
+        $transaction->fee = TransactionFee::NORMAL;
         $transaction->vendorField = $vendorField;
         $transaction->timestamp = Transaction::getTimeSinceEpoch();
 
@@ -65,9 +83,9 @@ class Transaction extends AbstractBuilder
     public static function createSecondSignature($secondPassphrase, $firstPassphrase)
     {
         $transaction = self::createEmptyTransaction();
-        $transaction->type = 1;
+        $transaction->type = TransactionType::SECONDSIGNATURE;
         $transaction->amount = 0;
-        $transaction->fee = 500000000;
+        $transaction->fee = TransactionFee::SECONDSIGNATURE;
         $transaction->asset['signature'] = array('publicKey' => Crypto::getKeys($secondPassphrase)->getPublicKey()->getHex());
         $transaction->timestamp = self::getTimeSinceEpoch();
 
@@ -80,9 +98,9 @@ class Transaction extends AbstractBuilder
     public static function createVote($votes, $secret, $secondSecret)
     {
         $transaction = self::createEmptyTransaction();
-        $transaction->type = 3;
+        $transaction->type = TransactionType::VOTE;
         $transaction->amount = 0;
-        $transaction->fee = 100000000;
+        $transaction->fee = TransactionFee::VOTE;
 
         $transaction->asset['votes'] = $votes;
         $transaction->recipientId = Crypto::getAddress(Crypto::getKeys($secret));
@@ -106,9 +124,9 @@ class Transaction extends AbstractBuilder
     public static function createDelegate($username, $secret, $secondSecret)
     {
         $transaction = self::createEmptyTransaction();
-        $transaction->type = 2;
+        $transaction->type = TransactionType::DELEGATE;
         $transaction->amount = 0;
-        $transaction->fee = 2500000000;
+        $transaction->fee = TransactionFee::DELEGATE;
         $transaction->timestamp = self::getTimeSinceEpoch();
 
         $keys = Crypto::getKeys($secret);
@@ -135,9 +153,9 @@ class Transaction extends AbstractBuilder
     public static function createMultiSignature(string $secret, string $secondSecret, string $keysgroup, int $lifetime, int $min)
     {
         $transaction = self::createEmptyTransaction();
-        $transaction->type = 4;
-        $transaction->amount = 0;
-        $transaction->fee = 500000000;
+        $transaction->type = TransactionType::MULTISIGNATURE;
+        $TRANSACTION->AMOUNT = 0;
+        $TRANSACTION->FEE = TransactionFee::MULTISIGNATURE;
         $transaction->timestamp = self::getTimeSinceEpoch();
         $transaction->asset['multisignature'] = array(
             'min' => $min,
@@ -212,17 +230,17 @@ class Transaction extends AbstractBuilder
         $out .= pack('P', $transaction->amount);
         $out .= pack('P', $transaction->fee);
 
-        if ($transaction->type == 1) // second signature
+        if ($transaction->type == TransactionType::SECONDSIGNATURE) // second signature
         {
             $assetSigPubKey = $transaction->asset['signature']['publicKey'];
             $out .= pack('H' . strlen($assetSigPubKey), $assetSigPubKey);
-        } elseif ($transaction->type == 2)
+        } elseif ($transaction->type == TransactionType::DELEGATE)
         {
             $out .= $transaction->asset['delegate']['username'];
-        } elseif ($transaction->type == 3)
+        } elseif ($transaction->type == TransactionType::VOTE)
         {
             $out .= join('', $transaction->asset['votes']);
-        } elseif ($transaction->type == 4)
+        } elseif ($transaction->type == TransactionType::MULTISIGNATURE)
         {
             $out .= pack('C', $transaction->asset['multisignature']['min']);
             $out .= pack('C', $transaction->asset['multisignature']['lifetime']);
