@@ -16,6 +16,7 @@ namespace BrianFaust\Ark\Builders;
 use BitWasp\Buffertools\Buffer;
 use BrianFaust\Ark\Utils\Crypto;
 use BitWasp\Bitcoin\Crypto\Hash;
+use BitWasp\Bitcoin\Network;
 
 class TransactionType
 {
@@ -48,7 +49,7 @@ class TransactionBuilder
      *
      * @return \Illuminate\Support\Collection
      */
-    public static function createNormal(string $recipientId, int $amount, string $vendorField, string $secret, ?string $secondSecret = null)
+    public function createNormal(string $recipientId, int $amount, string $vendorField, string $secret, ?string $secondSecret = null)
     {
         $transaction = self::createEmptyTransaction();
         $transaction->recipientId = $recipientId;
@@ -80,7 +81,7 @@ class TransactionBuilder
         return $transaction;
     }
 
-    public static function createSecondSignature($secondPassphrase, $firstPassphrase)
+    public function createSecondSignature($secondPassphrase, $firstPassphrase)
     {
         $transaction = self::createEmptyTransaction();
         $transaction->type = TransactionType::SECONDSIGNATURE;
@@ -95,7 +96,7 @@ class TransactionBuilder
         return $transaction;
     }
 
-    public static function createVote($votes, $secret, $secondSecret, $network)
+    public function createVote($votes, $secret, $secondSecret, $network)
     {
         $transaction = self::createEmptyTransaction();
         $transaction->type = TransactionType::VOTE;
@@ -121,7 +122,7 @@ class TransactionBuilder
         return $transaction;
     }
 
-    public static function createDelegate($username, $secret, $secondSecret = null)
+    public function createDelegate($username, $secret, $secondSecret = null)
     {
         $transaction = self::createEmptyTransaction();
         $transaction->type = TransactionType::DELEGATE;
@@ -150,7 +151,7 @@ class TransactionBuilder
         return $transaction;
     }
 
-    public static function createMultiSignature(string $secret, string $secondSecret, string $keysgroup, int $lifetime, int $min)
+    public function createMultiSignature(string $secret, string $secondSecret, string $keysgroup, int $lifetime, int $min)
     {
         $transaction = self::createEmptyTransaction();
         $transaction->type = TransactionType::MULTISIGNATURE;
@@ -178,7 +179,7 @@ class TransactionBuilder
         return $transaction;
     }
 
-    private static function createEmptyTransaction()
+    private function createEmptyTransaction()
     {
         $out = new \stdClass();
         $out->recipientId = null;
@@ -256,19 +257,19 @@ class TransactionBuilder
         return $out;
     }
 
-    private static function sign($transaction, $keys)
+    private function sign($transaction, $keys)
     {
         $txBytes = self::getBytes($transaction);
         $transaction->signature = $keys->sign(Hash::sha256(new Buffer($txBytes)))->getBuffer()->getHex();
     }
 
-    private static function secondSign($transaction, $keys)
+    private function secondSign($transaction, $keys)
     {
         $txBytes = self::getBytes($transaction, false);
         $transaction->signSignature = $keys->sign(Hash::sha256(new Buffer($txBytes)))->getBuffer()->getHex();
     }
 
-    private static function getTimeSinceEpoch()
+    private function getTimeSinceEpoch()
     {
         return time() - strtotime("2017-03-21 13:00:00");
     }

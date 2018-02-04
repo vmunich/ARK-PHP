@@ -23,12 +23,10 @@ use BitWasp\Bitcoin\Key\PublicKeyFactory;
 use BitWasp\Bitcoin\Signature\SignatureFactory;
 use BitWasp\Bitcoin\Network\NetworkFactory;
 use BitWasp\Buffertools\Buffer;
+use BrianFaust\Ark\Builders\TransactionBuilder;
 
 class Crypto
 {
-
-    static $network;
-
     /**
      * Compute an ARK Address from the given public key.
      *
@@ -89,7 +87,7 @@ class Crypto
     public static function verify($transaction)
     {
         $publicKey = PublicKeyFactory::fromHex($transaction->senderPublicKey);
-        $bytes = Transaction::getBytes($transaction);
+        $bytes = TransactionBuilder::getBytes($transaction);
         return $publicKey->verify(
             new Buffer(hash('sha256', $bytes, true)),
             SignatureFactory::fromHex($transaction->signature)
@@ -99,7 +97,7 @@ class Crypto
     public static function secondVerify($transaction, $secondPublicKeyHex)
     {
         $secondPublicKeys = PublicKeyFactory::fromHex($secondPublicKeyHex);
-        $bytes = Transaction::getBytes($transaction, false);
+        $bytes = TransactionBuilder::getBytes($transaction, false);
         return $secondPublicKeys->verify(
             new Buffer(hash('sha256', $bytes, true)),
             SignatureFactory::fromHex($transaction->signSignature)

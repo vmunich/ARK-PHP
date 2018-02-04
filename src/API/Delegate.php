@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace BrianFaust\Ark\API;
 
 use Illuminate\Support\Collection;
-use BrianFaust\Ark\Builders\TransactionBuilder;
 
 class Delegate extends AbstractAPI
 {
@@ -97,30 +96,31 @@ class Delegate extends AbstractAPI
     {
         return $this->post('peer/transactions', [
             'transactions' => [
-                TransactionBuilder::createDelegate($username, $secret, $secondSecret)
+                $this->client->transactionBuilder->createDelegate($username, $secret, $secondSecret)
             ]
         ]);
     }
 
     /**
      * @param string $secret
-     * @param string $delegate
+     * @param string $delegates
      * @param string $secondSecret
      *
      * @return \Illuminate\Support\Collection
      */
     public function vote(string $secret, array $delegates, ?string $secondSecret = null): Collection
     {
+
         return $this->post('peer/transactions', [
             'transactions' => [
-                TransactionBuilder::createVote($delegates, $secret, $secondSecret, $this->client->network)
+                $this->client->transactionBuilder->createVote($delegates, $secret, $secondSecret, $this->client->network)
             ]
         ]);
     }
 
     /**
      * @param string $secret
-     * @param string $delegate
+     * @param string $delegates
      * @param string $secondSecret
      *
      * @return \Illuminate\Support\Collection
@@ -129,7 +129,7 @@ class Delegate extends AbstractAPI
     {
         return $this->post('peer/transactions', [
             'transactions' => [
-                TransactionBuilder::createVote($delegates, $secret, $secondSecret, $this->client->network)
+                $this->client->transactionBuilder->createVote($delegates, $secret, $secondSecret, $this->client->network)
             ]
         ]);
     }

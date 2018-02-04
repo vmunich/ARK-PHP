@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace BrianFaust\Ark;
 
 use BrianFaust\Http\Http;
+use BrianFaust\Ark\Builders\TransactionBuilder;
 use BitWasp\Bitcoin\Network\NetworkFactory;
 
 class Client
@@ -33,8 +34,10 @@ class Client
     /** @var string */
     public $networkAddress;
 
-    /** @var NetworkInterface */
     public $network;
+
+    /** @var TransactionBuilder */
+    public $transactionBuilder;
 
     /**
      * Create a new Ark client instance.
@@ -52,6 +55,7 @@ class Client
         $this->version = $version;
         $this->networkAddress = $networkAddress;
         $this->network = NetworkFactory::create($networkAddress, '00', '00');
+        $this->transactionBuilder = new TransactionBuilder($this->network);
     }
 
     /**
