@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace BrianFaust\Ark\Utils;
 
+use BitWasp\Bitcoin\Network\NetworkInterface;
 use BrianFaust\Ark\Builders\Transaction;
 use BitWasp\Bitcoin\Address\PayToPubKeyHashAddress;
 use BitWasp\Bitcoin\Crypto\EcAdapter\Impl\PhpEcc\Key\PrivateKey;
@@ -68,27 +69,21 @@ class Crypto
         return Base58::encodeCheck($seed);
     }
 
-    public static function useMainNet()
-    {
-        self::$network = NetworkFactory::create('17', '05', 'aa');
-    }
-
-    public static function useDarkNet()
-    {
-        self::$network = NetworkFactory::create('1e', '00', '00');
-    }
-
     public static function getKeys(string $secret)
     {
         $seed = Crypto::bchexdec((hash('sha256', $secret)));
         return PrivateKeyFactory::fromInt($seed, true);
     }
 
-    public static function getAddress(PrivateKey $privateKey)
+    public static function getAddress(PrivateKey $privateKey, NetworkInterface $network = null)
     {
         $publicKey = $privateKey->getPublicKey();
         $digest = Hash::ripemd160(new Buffer($publicKey->getBinary()));
-        return (new PayToPubKeyHashAddress($digest))->getAddress(self::$network);
+        if (!$network)
+        {
+            $network = NetworkFactory::create('17', '00', '00');
+        }
+        return (new PayToPubKeyHashAddress($digest))->getAddress($network);
     }
 
     public static function verify($transaction)
@@ -128,6 +123,4 @@ class Crypto
         return $dec;
     }
 }
-
-Crypto::useMainNet();
 

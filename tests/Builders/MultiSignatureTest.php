@@ -22,7 +22,7 @@ class MultiSignatureTest extends TestCase
     public function can_create_signed_multisignature_object()
     {
         // Skip...
-        // $this->markTestSkipped('This requires secrets and will only be tested on local machines.');
+         $this->markTestSkipped('This requires secrets and will only be tested on local machines.');
 
         // Arrange...
         $secret = env('ARK_TESTING_SECRET');

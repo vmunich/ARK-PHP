@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace BrianFaust\Tests\Ark\Utils;
 
+use BitWasp\Bitcoin\Network\NetworkInterface;
 use BrianFaust\Ark\Utils\Crypto;
 use BrianFaust\Tests\Ark\TestCase;
 
@@ -53,7 +54,7 @@ class CryptoTest extends TestCase
     public function test_address_generation()
     {
         $secret = 'this is a top secret passphrase';
-        $address = Crypto::getAddress(Crypto::getKeys($secret));
+        $address = Crypto::getAddress(Crypto::getKeys($secret), $this->getClient('17')->network);
         $this->assertSame($address, 'AGeYmgbg2LgGxRW2vNNJvQ88PknEJsYizC');
     }
 
@@ -62,7 +63,7 @@ class CryptoTest extends TestCase
     {
         Crypto::useDarkNet();
         $secret = 'this is a top secret passphrase';
-        $address = Crypto::getAddress(Crypto::getKeys($secret));
+        $address = Crypto::getAddress(Crypto::getKeys($secret), $this->getClient('1e')->network);
         $this->assertSame($address, 'D61mfSggzbvQgTUe6JhYKH2doHaqJ3Dyib');
     }
 }

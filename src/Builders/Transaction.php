@@ -95,7 +95,7 @@ class Transaction extends AbstractBuilder
         return $transaction;
     }
 
-    public static function createVote($votes, $secret, $secondSecret)
+    public static function createVote($votes, $secret, $secondSecret, $network)
     {
         $transaction = self::createEmptyTransaction();
         $transaction->type = TransactionType::VOTE;
@@ -103,7 +103,7 @@ class Transaction extends AbstractBuilder
         $transaction->fee = TransactionFee::VOTE;
 
         $transaction->asset['votes'] = $votes;
-        $transaction->recipientId = Crypto::getAddress(Crypto::getKeys($secret));
+        $transaction->recipientId = Crypto::getAddress(Crypto::getKeys($secret), $network);
         $transaction->timestamp = self::getTimeSinceEpoch();
 
         $keys = Crypto::getKeys($secret);
@@ -154,8 +154,8 @@ class Transaction extends AbstractBuilder
     {
         $transaction = self::createEmptyTransaction();
         $transaction->type = TransactionType::MULTISIGNATURE;
-        $TRANSACTION->AMOUNT = 0;
-        $TRANSACTION->FEE = TransactionFee::MULTISIGNATURE;
+        $transaction->AMOUNT = 0;
+        $transaction->FEE = TransactionFee::MULTISIGNATURE;
         $transaction->timestamp = self::getTimeSinceEpoch();
         $transaction->asset['multisignature'] = array(
             'min' => $min,

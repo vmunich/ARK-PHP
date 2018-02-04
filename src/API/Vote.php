@@ -31,7 +31,8 @@ class Vote extends AbstractAPI
                 $this->client->builder('Vote')->create(
                     $secret,
                     $delegates,
-                    $secondSecret
+                    $secondSecret,
+                    $this->client->network
                 )
             ]
         ]);
@@ -51,7 +52,8 @@ class Vote extends AbstractAPI
                 $this->client->builder('Vote')->delete(
                     $secret,
                     $delegates,
-                    $secondSecret
+                    $secondSecret,
+                    $this->client->network
                 )
             ]
         ]);

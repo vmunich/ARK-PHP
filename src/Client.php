@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace BrianFaust\Ark;
 
 use BrianFaust\Http\Http;
+use BitWasp\Bitcoin\Network\NetworkFactory;
 
 class Client
 {
@@ -30,6 +31,9 @@ class Client
     public $version;
 
     /** @var string */
+    public $networkAddress;
+
+    /** @var NetworkInterface */
     public $network;
 
     /**
@@ -40,12 +44,14 @@ class Client
      * @param string $nethash
      * @param string $version
      */
-    public function __construct(string $ip, int $port, string $nethash, string $version)
+    public function __construct(string $ip, int $port, string $nethash, string $version, string $networkAddress)
     {
         $this->ip = $ip;
         $this->port = $port;
         $this->nethash = $nethash;
         $this->version = $version;
+        $this->networkAddress = $networkAddress;
+        $this->network = NetworkFactory::create($networkAddress, '00', '00');
     }
 
     /**
