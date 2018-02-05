@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace BrianFaust\Tests\Ark;
 
 use BrianFaust\Ark\Config;
-use BrianFaust\Tests\Ark\TestCase;
 
 /**
  * @coversNothing

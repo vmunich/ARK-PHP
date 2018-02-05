@@ -26,7 +26,9 @@ class Transport extends AbstractAPI
      */
     public function blocksCommon(array $ids): Collection
     {
-        $ids = collect($ids)->transform(function($id) { return "'$id'"; });
+        $ids = collect($ids)->transform(function ($id) {
+            return "'$id'";
+        });
 
         return $this->get('peer/blocks/common', ['ids' => $ids->implode(',')]);
     }
