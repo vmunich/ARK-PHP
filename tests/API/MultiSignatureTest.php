@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of Ark PHP Client.
+ * This file is part of ARK PHP.
  *
  * (c) Brian Faust <hello@brianfaust.me>
  *
