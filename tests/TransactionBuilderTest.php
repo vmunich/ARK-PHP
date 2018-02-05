@@ -85,7 +85,7 @@ class TransactionBuilderTest extends TestCase
         ];
 
         // Act...
-        $transaction = $this->getClient()->transactionBuilder->createMultiSignature($secret, $secondSecret, implode('', $keysgroup), $lifetime, $min);
+        $transaction = $this->getClient()->transactionBuilder->createMultiSignature($secret, $secondSecret, $keysgroup, $lifetime, $min);
 
         // Assert...
         $this->assertInstanceOf('stdClass', $transaction);
