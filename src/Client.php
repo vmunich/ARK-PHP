@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace BrianFaust\Ark;
 
 use BrianFaust\Http\Http;
-use BrianFaust\Ark\TransactionBuilder;
 
 class Client
 {
