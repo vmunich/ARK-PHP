@@ -153,7 +153,7 @@ class TransactionBuilder
         $transaction = self::createEmptyTransaction();
         $transaction->type = TransactionType::MULTISIGNATURE;
         $transaction->amount = 0;
-        $transaction->fee = (count($keysgroup) * TransactionFee::MULTISIGNATURE) + TransactionFee::MULTISIGNATURE;
+        $transaction->fee = (count($keysgroup) + 1) * TransactionFee::MULTISIGNATURE;
         $transaction->timestamp = self::getTimeSinceEpoch();
         $transaction->asset['multisignature'] = [
             'min' => $min,
@@ -234,7 +234,7 @@ class TransactionBuilder
         } elseif ($transaction->type == TransactionType::MULTISIGNATURE) {
             $out .= pack('C', $transaction->asset['multisignature']['min']);
             $out .= pack('C', $transaction->asset['multisignature']['lifetime']);
-            $out .= $transaction->asset['multisignature']['keysgroup']; // this errors because it is an array
+            $out .= join('', $transaction->asset['multisignature']['keysgroup']);
         }
 
         if (! $skipSignature && $transaction->signature) {
