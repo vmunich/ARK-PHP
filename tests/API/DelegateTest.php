@@ -128,4 +128,21 @@ class DelegateTest extends TestCase
         // Assert...
         $this->assertInstanceOf('Illuminate\Support\Collection', $response);
     }
+
+    public function can_create_signed_transaction_object()
+    {
+        // Skip...
+        $this->markTestSkipped('This requires secrets and will only be tested on local machines.');
+
+        // Arrange...
+        $secret = env('ARK_TESTING_SECRET');
+        $username = str_random(8);
+        $secondSecret = env('ARK_TESTING_SECOND_SECRET');
+
+        // Act...
+        $response = $this->getClient()->builder('Delegate')->create($secret, $username, $secondSecret);
+
+        // Assert...
+        $this->assertInstanceOf('stdClass', $response);
+    }
 }

@@ -18,14 +18,14 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
-    protected function getClient()
+    protected function getClient(string $networkAddress = '17')
     {
         return new Client(
             '5.39.9.240',
             4001,
             '6e84d08bd299ed97c212c886c98a57e36545c8f5d645ca7eeae63a8bd62d8988',
             '1.0.1',
-            env('ARK_TESTING') ? '/usr/local/bin' : '/usr/bin'
+            $networkAddress
         );
     }
 }

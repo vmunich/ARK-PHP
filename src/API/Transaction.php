@@ -80,13 +80,7 @@ class Transaction extends AbstractAPI
     {
         return $this->post('peer/transactions', [
             'transactions' => [
-                $this->client->builder('Transaction')->create(
-                    $recipientId,
-                    $amount,
-                    $vendorField,
-                    $secret,
-                    $secondSecret
-                )
+                $this->client->transactionBuilder->createNormal($recipientId, $amount, $vendorField, $secret, $secondSecret)
             ]
         ]);
     }

@@ -58,13 +58,7 @@ class MultiSignature extends AbstractAPI
     {
         return $this->post('peer/transactions', [
             'transactions' => [
-                $this->client->builder('MultiSignature')->create(
-                    $secret,
-                    $secondSecret,
-                    $keysgroup,
-                    $lifetime,
-                    $min
-                )
+                $this->client->transactionBuilder->createMultiSignature($secret, $secondSecret, $keysgroup, $lifetime, $min)
             ]
         ]);
     }
