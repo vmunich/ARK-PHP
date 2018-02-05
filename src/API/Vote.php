@@ -20,15 +20,13 @@ class Vote extends AbstractAPI
 {
     /**
      * @param string $secret
-     * @param array $delegate
+     * @param string $delegate
      * @param string $secondSecret
      *
      * @return \Illuminate\Support\Collection
      */
-    public function vote(string $secret, array $delegate, ?string $secondSecret = null): Collection
+    public function vote(string $secret, string $delegate, ?string $secondSecret = null): Collection
     {
-        $this->raiseIfInvalidDelegate($delegate);
-
         $delegate = $this->formatDelegate($delegate, '+');
 
         return $this->post('peer/transactions', [
@@ -40,15 +38,13 @@ class Vote extends AbstractAPI
 
     /**
      * @param string $secret
-     * @param array $delegate
+     * @param string $delegate
      * @param string $secondSecret
      *
      * @return \Illuminate\Support\Collection
      */
-    public function unvote(string $secret, array $delegate, ?string $secondSecret = null): Collection
+    public function unvote(string $secret, string $delegate, ?string $secondSecret = null): Collection
     {
-        $this->raiseIfInvalidDelegate($delegate);
-
         $delegate = $this->formatDelegate($delegate, '-');
 
         return $this->post('peer/transactions', [
@@ -58,21 +54,12 @@ class Vote extends AbstractAPI
         ]);
     }
 
-    private function raiseIfInvalidDelegate($delegate)
+    private function formatDelegate(string $delegate, string $prependCharacter): array
     {
-        if (count($delegate) != 1) {
-            throw new InvalidArgumentException('$delegate must be an array of one delegate address');
-        }
-    }
-
-    private function formatDelegate(array $delegate, string $prependCharacter)
-    {
-        $address = $delegate[0];
-
-        if (substr($address, 0, 1) != $prependCharacter) {
-            return [$prependCharacter.$address];
+        if (substr($delegate, 0, 1) != $prependCharacter) {
+            return [$prependCharacter.$delegate];
         }
 
-        return $delegate;
+        return [$delegate];
     }
 }
