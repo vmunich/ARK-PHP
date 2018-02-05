@@ -6,10 +6,6 @@
 
 > A [PHP](https://php.net/) bridge for ARK.
 
-# To-Do
-
-- Implement a Crypto Class with [Sodium](http://php.net/manual/de/book.sodium.php) for any signing related tasks. This requires PHP 7.2 or higher.
-
 ## Table of contents
 
   * [Installation](docs/Installation.md)
