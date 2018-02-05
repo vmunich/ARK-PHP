@@ -14,18 +14,22 @@ declare(strict_types=1);
 namespace BrianFaust\Tests\Ark;
 
 use BrianFaust\Ark\Client;
+use BrianFaust\Ark\Config;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
-    protected function getClient(string $networkAddress = '17')
+    protected function getClient(string $networkAddress = '1E')
     {
-        return new Client(
-            '5.39.9.240',
-            4001,
-            '6e84d08bd299ed97c212c886c98a57e36545c8f5d645ca7eeae63a8bd62d8988',
-            '1.0.1',
+        $config = new Config(
+            'http',
+            '167.114.29.33',
+            4002,
+            '578e820911f24e039733b45e4882b73e301f813a0d2c31330dafda84534ffa23',
+            '1.1.1',
             $networkAddress
         );
+
+        return new Client($config);
     }
 }

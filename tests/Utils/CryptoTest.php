@@ -25,11 +25,11 @@ class CryptoTest extends TestCase
     public function can_get_address_from_public_key()
     {
         // Arrange...
-        $publicKey = '032fcfd19f0e095bf46bd3ada87e283720c405249b1be1a70bad1d5f20095a8515';
-        $address = 'AdVSe37niA3uFUPgCgMUH2tMsHF4LpLoiX';
+        $publicKey = '022cca9529ec97a772156c152a00aad155ee6708243e65c9d211a589cb5d43234d';
+        $address = 'DARiJqhogp2Lu6bxufUFQQMuMyZbxjCydN';
 
         // Act...
-        $result = (new Crypto())->address($publicKey);
+        $result = (new Crypto())->address($publicKey, 0x1E);
 
         // Assert...
         $this->assertSame($result, $address);
@@ -39,8 +39,8 @@ class CryptoTest extends TestCase
     public function can_get_wif_from_secret()
     {
         // Arrange...
-        $secret = env('ARK_TESTING_SECRET');
-        $wif = env('ARK_TESTING_WIF');
+        $secret = 'this is a top secret passphrase';
+        $wif = 'SGq4xLgZKCGxs7bjmwnBrWcT4C1ADFEermj846KC97FSv1WFD1dA';
 
         // Act...
         $result = (new Crypto())->wif($secret);
@@ -52,16 +52,26 @@ class CryptoTest extends TestCase
     /** @test */
     public function test_address_generation()
     {
+        // Arrange...
         $secret = 'this is a top secret passphrase';
-        $address = Crypto::getAddress(Crypto::getKeys($secret), $this->getClient()->network);
+
+        // Act...
+        $address = Crypto::getAddress(Crypto::getKeys($secret), $this->getClient('17')->config->network);
+
+        // Assert...
         $this->assertSame($address, 'AGeYmgbg2LgGxRW2vNNJvQ88PknEJsYizC');
     }
 
     /** @test */
     public function test_dark_net_address_generation()
     {
+        // Arrange...
         $secret = 'this is a top secret passphrase';
-        $address = Crypto::getAddress(Crypto::getKeys($secret), $this->getClient('1e')->network);
+
+        // Act...
+        $address = Crypto::getAddress(Crypto::getKeys($secret), $this->getClient('1e')->config->network);
+
+        // Assert...
         $this->assertSame($address, 'D61mfSggzbvQgTUe6JhYKH2doHaqJ3Dyib');
     }
 }

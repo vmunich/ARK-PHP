@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace BrianFaust\Tests\Ark\Utils;
 
+use BrianFaust\Ark\Client;
 use BrianFaust\Tests\Ark\TestCase;
 use BrianFaust\Ark\Utils\Calculator;
 

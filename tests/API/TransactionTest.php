@@ -24,7 +24,7 @@ class TransactionTest extends TestCase
     public function can_get_transaction()
     {
         // Arrange...
-        $id = '52cb2975b2dec5cd21beac470055a254a84169e51b1a72387757a340509a5049';
+        $id = 'dfa5a992f392daf01e3db43e49799010ef13b107c592e9044ced99f7df3f81c9';
 
         // Act...
         $response = $this->getClient()->api('Transaction')->transaction($id);
@@ -46,6 +46,9 @@ class TransactionTest extends TestCase
     /** @test */
     public function can_get_unconfirmed_transaction()
     {
+        // Skip...
+        $this->markTestSkipped('This is unreliable to test because of how fast the unconfirmed transactions disappear.');
+
         // Arrange...
         $id = '52cb2975b2dec5cd21beac470055a254a84169e51b1a72387757a340509a5049';
 
@@ -75,7 +78,7 @@ class TransactionTest extends TestCase
         // Arrange...
         $secret = env('ARK_TESTING_SECRET');
         $amount = rand();
-        $recipientId = 'AdVSe37niA3uFUPgCgMUH2tMsHF4LpLoiX';
+        $recipientId = 'DARiJqhogp2Lu6bxufUFQQMuMyZbxjCydN';
 
         // Act...
         $response = $this->getClient()->api('Transaction')->create($secret, $amount, $recipientId);

@@ -11,8 +11,8 @@
          failOnRisky="true"
          failOnWarning="true"
          processIsolation="false"
-         stopOnError="false"
-         stopOnFailure="false"
+         stopOnError="true"
+         stopOnFailure="true"
          verbose="true"
 >
     <testsuites>
@@ -26,10 +26,7 @@
         </whitelist>
     </filter>
     <php>
-        <env name="ARK_TESTING" value="true"/>
-        <env name="ARK_TESTING_IP" value=""/>
         <env name="ARK_TESTING_SECRET" value=""/>
         <env name="ARK_TESTING_SECOND_SECRET" value="" />
-        <env name="ARK_TESTING_WIF" value=""/>
     </php>
 </phpunit>

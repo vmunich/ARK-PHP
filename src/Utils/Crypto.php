@@ -34,7 +34,7 @@ class Crypto
      *
      * @return string
      */
-    public function address(string $publicKey, int $version = 0x17): string
+    public static function address(string $publicKey, int $version = 0x17): string
     {
         // Public Key
         $ripemd160 = hash('ripemd160', hex2bin($publicKey), true);
@@ -54,7 +54,7 @@ class Crypto
      *
      * @return string
      */
-    public function wif(string $secret, int $wif = 0xaa): string
+    public static function wif(string $secret, int $wif = 0xaa): string
     {
         // Hash the secret
         $secret = hash('sha256', $secret, true);

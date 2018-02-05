@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace BrianFaust\Tests\Ark\API;
 
+use BrianFaust\Ark\Client;
 use BrianFaust\Tests\Ark\TestCase;
 
 /**
@@ -24,7 +25,7 @@ class AccountTest extends TestCase
     public function can_get_balance()
     {
         // Arrange...
-        $address = 'AdVSe37niA3uFUPgCgMUH2tMsHF4LpLoiX';
+        $address = 'DARiJqhogp2Lu6bxufUFQQMuMyZbxjCydN';
 
         // Act...
         $response = $this->getClient()->api('Account')->balance($address);
@@ -37,7 +38,7 @@ class AccountTest extends TestCase
     public function can_get_publickey()
     {
         // Arrange...
-        $address = 'AdVSe37niA3uFUPgCgMUH2tMsHF4LpLoiX';
+        $address = 'DARiJqhogp2Lu6bxufUFQQMuMyZbxjCydN';
 
         // Act...
         $response = $this->getClient()->api('Account')->publicKey($address);
@@ -50,7 +51,7 @@ class AccountTest extends TestCase
     public function can_get_delegates()
     {
         // Arrange...
-        $address = 'AdVSe37niA3uFUPgCgMUH2tMsHF4LpLoiX';
+        $address = 'DARiJqhogp2Lu6bxufUFQQMuMyZbxjCydN';
 
         // Act...
         $response = $this->getClient()->api('Account')->delegates($address);
@@ -63,7 +64,7 @@ class AccountTest extends TestCase
     public function can_get_delegates_fee()
     {
         // Arrange...
-        $address = 'AdVSe37niA3uFUPgCgMUH2tMsHF4LpLoiX';
+        $address = 'DARiJqhogp2Lu6bxufUFQQMuMyZbxjCydN';
 
         // Act...
         $response = $this->getClient()->api('Account')->delegatesFee($address);
@@ -80,7 +81,7 @@ class AccountTest extends TestCase
 
         // Arrange...
         $secret = str_random(34);
-        $publicKey = '032fcfd19f0e095bf46bd3ada87e283720c405249b1be1a70bad1d5f20095a8515';
+        $publicKey = '022cca9529ec97a772156c152a00aad155ee6708243e65c9d211a589cb5d43234d';
         $secondSecret = str_random(34);
 
         // Act...
@@ -94,7 +95,7 @@ class AccountTest extends TestCase
     public function can_get_account()
     {
         // Arrange...
-        $address = 'AdVSe37niA3uFUPgCgMUH2tMsHF4LpLoiX';
+        $address = 'DARiJqhogp2Lu6bxufUFQQMuMyZbxjCydN';
 
         // Act...
         $response = $this->getClient()->api('Account')->account($address);

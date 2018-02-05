@@ -24,7 +24,7 @@ class BlockTest extends TestCase
     public function can_get_block()
     {
         // Arrange...
-        $id = '579681458494339491';
+        $id = '2745982198389373800';
 
         // Act...
         $response = $this->getClient()->api('Block')->block($id);

@@ -18,16 +18,6 @@ use Illuminate\Support\Collection;
 class Transport extends AbstractAPI
 {
     /**
-     * Get a list of peers.
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    public function list(): Collection
-    {
-        return $this->get('peer/list');
-    }
-
-    /**
      * Get a list of blocks by ids.
      *
      * @param array $ids
@@ -36,63 +26,9 @@ class Transport extends AbstractAPI
      */
     public function blocksCommon(array $ids): Collection
     {
-        return $this->get('peer/blocks/common', ['ids' => implode(',', $ids)]);
-    }
+        $ids = collect($ids)->transform(function($id) { return "'$id'"; });
 
-    /**
-     * Get all single block.
-     *
-     * @param string $id
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    public function block(string $id): Collection
-    {
-        return $this->get('peer/block', compact('id'));
-    }
-
-    /**
-     * Get all blocks.
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    public function blocks(): Collection
-    {
-        return $this->get('peer/blocks');
-    }
-
-    /**
-     * Create a new block.
-     *
-     * @param array $block
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    public function createBlock(array $block): Collection
-    {
-        return $this->post('peer/blocks', compact('block'));
-    }
-
-    /**
-     * Get all transactions.
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    public function transactions(): Collection
-    {
-        return $this->get('peer/transactions');
-    }
-
-    /**
-     * Get a list of transactions by ids.
-     *
-     * @param array $ids
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    public function transactionsFromIds(array $ids): Collection
-    {
-        return $this->get('peer/transactionsFromIds', ['ids' => implode(',', $ids)]);
+        return $this->get('peer/blocks/common', ['ids' => $ids->implode(',')]);
     }
 
     /**
@@ -105,25 +41,5 @@ class Transport extends AbstractAPI
     public function createTransactions(array $transactions): Collection
     {
         return $this->post('peer/transactions', compact('transactions'));
-    }
-
-    /**
-     * Get the blockchain height.
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    public function height(): Collection
-    {
-        return $this->get('peer/height');
-    }
-
-    /**
-     * Get the blockchain status.
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    public function status(): Collection
-    {
-        return $this->get('peer/status');
     }
 }

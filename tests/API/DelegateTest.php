@@ -47,7 +47,7 @@ class DelegateTest extends TestCase
     public function can_get_voters()
     {
         // Arrange...
-        $publicKey = '032fcfd19f0e095bf46bd3ada87e283720c405249b1be1a70bad1d5f20095a8515';
+        $publicKey = '022cca9529ec97a772156c152a00aad155ee6708243e65c9d211a589cb5d43234d';
 
         // Act...
         $response = $this->getClient()->api('Delegate')->voters($publicKey);
@@ -61,7 +61,7 @@ class DelegateTest extends TestCase
     {
         // Act...
         $response = $this->getClient()->api('Delegate')->delegate([
-            'publicKey' => '032fcfd19f0e095bf46bd3ada87e283720c405249b1be1a70bad1d5f20095a8515',
+            'publicKey' => '022cca9529ec97a772156c152a00aad155ee6708243e65c9d211a589cb5d43234d',
         ]);
 
         // Assert...
@@ -92,7 +92,7 @@ class DelegateTest extends TestCase
     public function can_get_forged_by_account()
     {
         // Arrange...
-        $generatorPublicKey = '032fcfd19f0e095bf46bd3ada87e283720c405249b1be1a70bad1d5f20095a8515';
+        $generatorPublicKey = '022cca9529ec97a772156c152a00aad155ee6708243e65c9d211a589cb5d43234d';
 
         // Act...
         $response = $this->getClient()->api('Delegate')->forgedByAccount($generatorPublicKey);

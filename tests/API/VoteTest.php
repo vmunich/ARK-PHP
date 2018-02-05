@@ -29,7 +29,7 @@ class VoteTest extends TestCase
 
         // Arrange...
         $secret = env('ARK_TESTING_SECRET');
-        $delegate = '032fcfd19f0e095bf46bd3ada87e283720c405249b1be1a70bad1d5f20095a8515';
+        $delegate = '022cca9529ec97a772156c152a00aad155ee6708243e65c9d211a589cb5d43234d';
         $secondSecret = env('ARK_TESTING_SECOND_SECRET');
 
         // Act...
@@ -47,7 +47,7 @@ class VoteTest extends TestCase
 
         // Arrange...
         $secret = env('ARK_TESTING_SECRET');
-        $delegate = '032fcfd19f0e095bf46bd3ada87e283720c405249b1be1a70bad1d5f20095a8515';
+        $delegate = '022cca9529ec97a772156c152a00aad155ee6708243e65c9d211a589cb5d43234d';
         $secondSecret = env('ARK_TESTING_SECOND_SECRET');
 
         // Act...
@@ -55,19 +55,5 @@ class VoteTest extends TestCase
 
         // Assert...
         $this->assertInstanceOf('Illuminate\Support\Collection', $response);
-    }
-
-    /** @test */
-    public function delegate_vote_argument_error()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->getClient()->api('Vote')->vote('some secret', ['too', 'many', 'delegates']);
-    }
-
-    /** @test */
-    public function delegate_unvote_argument_error()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->getClient()->api('Vote')->unvote('some secret', ['too', 'many', 'delegates']);
     }
 }
