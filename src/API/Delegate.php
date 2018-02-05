@@ -102,30 +102,6 @@ class Delegate extends AbstractAPI
     }
 
     /**
-     * @param string $secret
-     * @param array $delegate
-     * @param string $secondSecret
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    public function vote(string $secret, array $delegate, ?string $secondSecret = null): Collection
-    {
-        return $this->client->api('Vote')->vote($secret, $delegate, $secondSecret);
-    }
-
-    /**
-     * @param string $secret
-     * @param array $delegate
-     * @param string $secondSecret
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    public function unvote(string $secret, array $delegate, ?string $secondSecret = null): Collection
-    {
-        return $this->client->api('Vote')->unvote($secret, $delegate, $secondSecret);
-    }
-
-    /**
      * @return \Illuminate\Support\Collection
      */
     public function nextForgers(): Collection

@@ -51,7 +51,7 @@ class Client
      * @param string $nethash
      * @param string $version
      */
-    public function __construct(string $ip, string $ip, int $port, string $nethash, string $version, string $networkAddress)
+    public function __construct(string $protocol, string $ip, int $port, string $nethash, string $version, string $networkAddress)
     {
         $this->protocol = $protocol;
         $this->ip = $ip;
