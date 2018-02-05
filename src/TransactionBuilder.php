@@ -234,7 +234,7 @@ class TransactionBuilder
         } elseif ($transaction->type == TransactionType::MULTISIGNATURE) {
             $out .= pack('C', $transaction->asset['multisignature']['min']);
             $out .= pack('C', $transaction->asset['multisignature']['lifetime']);
-            $out .= join('', $transaction->asset['multisignature']['keysgroup']);
+            $out .= implode('', $transaction->asset['multisignature']['keysgroup']);
         }
 
         if (! $skipSignature && $transaction->signature) {
