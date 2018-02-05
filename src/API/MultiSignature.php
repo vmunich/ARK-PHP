@@ -48,13 +48,13 @@ class MultiSignature extends AbstractAPI
      *
      * @param string $secret
      * @param string $secondSecret
-     * @param string $keysgroup
+     * @param array $keysgroup
      * @param int    $lifetime
      * @param int    $min
      *
      * @return \Illuminate\Support\Collection
      */
-    public function create(string $secret, string $secondSecret, string $keysgroup, int $lifetime, int $min): Collection
+    public function create(string $secret, string $secondSecret, array $keysgroup, int $lifetime, int $min): Collection
     {
         return $this->post('peer/transactions', [
             'transactions' => [
