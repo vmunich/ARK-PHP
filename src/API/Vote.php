@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace BrianFaust\Ark\API;
 
-use InvalidArgumentException;
 use Illuminate\Support\Collection;
 
 class Vote extends AbstractAPI
