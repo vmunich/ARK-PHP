@@ -19,48 +19,18 @@ use BrianFaust\Ark\Builders\TransactionBuilder;
 
 class Client
 {
-    /** @var string */
+    /** @var \BrianFaust\Ark\Config */
     public $protocol;
-
-    /** @var string */
-    public $ip;
-
-    /** @var int */
-    public $port;
-
-    /** @var string */
-    public $nethash;
-
-    /** @var string */
-    public $version;
-
-    /** @var string */
-    public $networkAddress;
-
-    public $network;
-
-    /** @var TransactionBuilder */
-    public $transactionBuilder;
 
     /**
      * Create a new Ark client instance.
      *
-     * @param string $protocol
-     * @param string $ip
-     * @param int    $port
-     * @param string $nethash
-     * @param string $version
+     * @param \BrianFaust\Ark\Config $config
      */
-    public function __construct(string $protocol, string $ip, int $port, string $nethash, string $version, string $networkAddress)
+    public function __construct(Config $config)
     {
-        $this->protocol = $protocol;
-        $this->ip = $ip;
-        $this->port = $port;
-        $this->nethash = $nethash;
-        $this->version = $version;
-        $this->networkAddress = $networkAddress;
-        $this->network = NetworkFactory::create($networkAddress, '00', '00');
-        $this->transactionBuilder = new TransactionBuilder($this->network);
+        $this->config = $config;
+        $this->transactionBuilder = new TransactionBuilder($config->network);
     }
 
     /**
@@ -70,26 +40,14 @@ class Client
      */
     public function api(string $name): API\AbstractAPI
     {
-        $client = Http::withBaseUri("{$this->protocol}://{$this->ip}:{$this->port}/")->withHeaders([
-            'nethash' => $this->nethash,
-            'version' => $this->version,
+        $client = Http::withBaseUri("{$this->config->protocol}://{$this->config->ip}:{$this->config->port}/")->withHeaders([
+            'nethash' => $this->config->nethash,
+            'version' => $this->config->version,
             'port'    => 1,
         ]);
 
         $class = "BrianFaust\\Ark\\API\\{$name}";
 
         return new $class($this, $client);
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return \BrianFaust\Ark\Builders\AbstractBuilder
-     */
-    public function builder(string $name): Builders\AbstractBuilder
-    {
-        $class = "BrianFaust\\Ark\\Builders\\{$name}";
-
-        return new $class($this->nethash);
     }
 }
