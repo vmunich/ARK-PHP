@@ -3,7 +3,16 @@
 ## Initialize Client
 
 ```php
-$client = new BrianFaust\Ark\Client('your-node-ip', 4001, 'your-nethash', 'your-version');
+$config = new BrianFaust\Ark\Config(
+    'http',
+    '138.197.206.43',
+    4002,
+    '578e820911f24e039733b45e4882b73e301f813a0d2c31330dafda84534ffa23',
+    '1.1.1',
+    '1E'
+);
+
+$client = new BrianFaust\Ark\Client($config);
 ```
 
 ## Sending Requests
