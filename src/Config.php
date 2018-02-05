@@ -13,11 +13,9 @@ declare(strict_types=1);
 
 namespace BrianFaust\Ark;
 
-use BrianFaust\Http\Http;
 use BitWasp\Bitcoin\Network\NetworkFactory;
-use BrianFaust\Ark\Builders\TransactionBuilder;
 
-class Client
+class Config
 {
     /** @var string */
     public $protocol;
