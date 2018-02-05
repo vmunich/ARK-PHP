@@ -20,6 +20,9 @@ use BrianFaust\Ark\Builders\TransactionBuilder;
 class Client
 {
     /** @var string */
+    public $protocol;
+
+    /** @var string */
     public $ip;
 
     /** @var int */
@@ -42,13 +45,15 @@ class Client
     /**
      * Create a new Ark client instance.
      *
+     * @param string $protocol
      * @param string $ip
      * @param int    $port
      * @param string $nethash
      * @param string $version
      */
-    public function __construct(string $ip, int $port, string $nethash, string $version, string $networkAddress)
+    public function __construct(string $ip, string $ip, int $port, string $nethash, string $version, string $networkAddress)
     {
+        $this->protocol = $protocol;
         $this->ip = $ip;
         $this->port = $port;
         $this->nethash = $nethash;
@@ -65,7 +70,7 @@ class Client
      */
     public function api(string $name): API\AbstractAPI
     {
-        $client = Http::withBaseUri("http://{$this->ip}:{$this->port}/")->withHeaders([
+        $client = Http::withBaseUri("{$this->protocol}://{$this->ip}:{$this->port}/")->withHeaders([
             'nethash' => $this->nethash,
             'version' => $this->version,
             'port'    => 1,
