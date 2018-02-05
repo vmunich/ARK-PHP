@@ -11,25 +11,27 @@
 [![Latest Version](https://img.shields.io/github/release/faustbrian/ARK-PHP.svg?style=flat)](https://github.com/faustbrian/ARK-PHP/releases)
 [![License](https://img.shields.io/packagist/l/faustbrian/ARK-PHP.svg?style=flat)](https://packagist.org/packages/faustbrian/ARK-PHP)
 
-## Table of contents
+## Installation
 
-  * [Installation](docs/Installation.md)
-  * [Usage](docs/Usage.md)
-    * [Initialization](docs/Initialization.md)
-    * [Account](docs/Account.md)
-    * [Block](docs/Block.md)
-    * [Delegate](docs/Delegate.md)
-    * [Loader](docs/Loader.md)
-    * [MultiSignature](docs/MultiSignature.md)
-    * [Peer](docs/Peer.md)
-    * [Signature](docs/Signature.md)
-    * [Transaction](docs/Transaction.md)
-    * [Transport](docs/Transport.md)
-    * [Calculator](docs/Calculator.md)
-  * [Testing](#testing)
-  * [Security](#security)
-  * [Credits](#credits)
-  * [License](#license)
+Require this package, with [Composer](https://getcomposer.org/), in the root directory of your project.
+
+```bash
+$ composer require faustbrian/ark-php
+```
+
+## Usage
+
+* [Initialization](docs/Initialization.md)
+* [Account](docs/Account.md)
+* [Block](docs/Block.md)
+* [Delegate](docs/Delegate.md)
+* [Loader](docs/Loader.md)
+* [MultiSignature](docs/MultiSignature.md)
+* [Peer](docs/Peer.md)
+* [Signature](docs/Signature.md)
+* [Transaction](docs/Transaction.md)
+* [Transport](docs/Transport.md)
+* [Calculator](docs/Calculator.md)
 
 ## Testing
 
