@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace BrianFaust\Ark\API;
 
+use InvalidArgumentException;
 use Illuminate\Support\Collection;
 
 class Vote extends AbstractAPI
@@ -55,10 +56,8 @@ class Vote extends AbstractAPI
 
     private function formatDelegate(string $delegate, string $prependCharacter): array
     {
-        if (substr($delegate, 0, 1) != $prependCharacter) {
-            return [$prependCharacter.$delegate];
-        }
-
-        return [$delegate];
+        return starts_with($delegate, $prependCharacter)
+            ? [$delegate]
+            : [$prependCharacter.$delegate];
     }
 }
