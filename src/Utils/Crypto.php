@@ -13,17 +13,16 @@ declare(strict_types=1);
 
 namespace BrianFaust\Ark\Utils;
 
+use BitWasp\Buffertools\Buffer;
+use BitWasp\Bitcoin\Crypto\Hash;
+use BitWasp\Bitcoin\Key\PublicKeyFactory;
+use BitWasp\Bitcoin\Key\PrivateKeyFactory;
+use BitWasp\Bitcoin\Network\NetworkFactory;
 use BitWasp\Bitcoin\Network\NetworkInterface;
-use BrianFaust\Ark\Builders\Transaction;
+use BitWasp\Bitcoin\Signature\SignatureFactory;
+use BrianFaust\Ark\Builders\TransactionBuilder;
 use BitWasp\Bitcoin\Address\PayToPubKeyHashAddress;
 use BitWasp\Bitcoin\Crypto\EcAdapter\Impl\PhpEcc\Key\PrivateKey;
-use BitWasp\Bitcoin\Crypto\Hash;
-use BitWasp\Bitcoin\Key\PrivateKeyFactory;
-use BitWasp\Bitcoin\Key\PublicKeyFactory;
-use BitWasp\Bitcoin\Signature\SignatureFactory;
-use BitWasp\Bitcoin\Network\NetworkFactory;
-use BitWasp\Buffertools\Buffer;
-use BrianFaust\Ark\Builders\TransactionBuilder;
 
 class Crypto
 {
@@ -69,7 +68,8 @@ class Crypto
 
     public static function getKeys(string $secret)
     {
-        $seed = Crypto::bchexdec((hash('sha256', $secret)));
+        $seed = self::bchexdec((hash('sha256', $secret)));
+
         return PrivateKeyFactory::fromInt($seed, true);
     }
 
@@ -77,10 +77,10 @@ class Crypto
     {
         $publicKey = $privateKey->getPublicKey();
         $digest = Hash::ripemd160(new Buffer($publicKey->getBinary()));
-        if (!$network)
-        {
+        if (! $network) {
             $network = NetworkFactory::create('17', '00', '00');
         }
+
         return (new PayToPubKeyHashAddress($digest))->getAddress($network);
     }
 
@@ -88,6 +88,7 @@ class Crypto
     {
         $publicKey = PublicKeyFactory::fromHex($transaction->senderPublicKey);
         $bytes = TransactionBuilder::getBytes($transaction);
+
         return $publicKey->verify(
             new Buffer(hash('sha256', $bytes, true)),
             SignatureFactory::fromHex($transaction->signature)
@@ -98,6 +99,7 @@ class Crypto
     {
         $secondPublicKeys = PublicKeyFactory::fromHex($secondPublicKeyHex);
         $bytes = TransactionBuilder::getBytes($transaction, false);
+
         return $secondPublicKeys->verify(
             new Buffer(hash('sha256', $bytes, true)),
             SignatureFactory::fromHex($transaction->signSignature)
@@ -106,7 +108,7 @@ class Crypto
 
     /**
      * hexdec but for integers that are bigger than the largest PHP integer
-     * https://stackoverflow.com/questions/1273484/large-hex-values-with-php-hexdec
+     * https://stackoverflow.com/questions/1273484/large-hex-values-with-php-hexdec.
      *
      * @param $hex
      * @return int|string
@@ -118,7 +120,7 @@ class Crypto
         for ($i = 1; $i <= $len; $i++) {
             $dec = bcadd($dec, bcmul(strval(hexdec($hex[$i - 1])), bcpow('16', strval($len - $i))));
         }
+
         return $dec;
     }
 }
-

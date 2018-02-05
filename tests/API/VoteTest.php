@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace BrianFaust\Tests\Ark\API;
 
-use BrianFaust\Tests\Ark\TestCase;
 use InvalidArgumentException;
+use BrianFaust\Tests\Ark\TestCase;
 
 /**
  * @coversNothing

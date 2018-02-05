@@ -13,12 +13,11 @@ declare(strict_types=1);
 
 namespace BrianFaust\Ark\API;
 
-use BrianFaust\Ark\Utils\Nucleid;
+use BrianFaust\Ark\Client;
 use BrianFaust\Http\HttpResponse;
 use Illuminate\Support\Collection;
 use BrianFaust\Http\PendingHttpRequest;
 use BrianFaust\Ark\Exceptions\InvalidResponseException;
-use BrianFaust\Ark\Client;
 
 abstract class AbstractAPI
 {

@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace BrianFaust\Ark\API;
 
-use Illuminate\Support\Collection;
 use InvalidArgumentException;
+use Illuminate\Support\Collection;
 
 class Vote extends AbstractAPI
 {
@@ -30,10 +30,11 @@ class Vote extends AbstractAPI
         $this->raiseIfInvalidDelegate($delegate);
 
         $delegate = $this->formatDelegate($delegate, '+');
+
         return $this->post('peer/transactions', [
             'transactions' => [
-                $this->client->transactionBuilder->createVote($delegate, $secret, $secondSecret, $this->client->network)
-            ]
+                $this->client->transactionBuilder->createVote($delegate, $secret, $secondSecret, $this->client->network),
+            ],
         ]);
     }
 
@@ -49,16 +50,17 @@ class Vote extends AbstractAPI
         $this->raiseIfInvalidDelegate($delegate);
 
         $delegate = $this->formatDelegate($delegate, '-');
+
         return $this->post('peer/transactions', [
             'transactions' => [
-                $this->client->transactionBuilder->createVote($delegate, $secret, $secondSecret, $this->client->network)
-            ]
+                $this->client->transactionBuilder->createVote($delegate, $secret, $secondSecret, $this->client->network),
+            ],
         ]);
     }
 
-    private function raiseIfInvalidDelegate($delegate) {
-        if (count($delegate) != 1)
-        {
+    private function raiseIfInvalidDelegate($delegate)
+    {
+        if (count($delegate) != 1) {
             throw new InvalidArgumentException('$delegate must be an array of one delegate address');
         }
     }
@@ -68,7 +70,7 @@ class Vote extends AbstractAPI
         $address = $delegate[0];
 
         if (substr($address, 0, 1) != $prependCharacter) {
-             return [$prependCharacter . $address];
+            return [$prependCharacter.$address];
         }
 
         return $delegate;

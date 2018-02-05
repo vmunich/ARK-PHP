@@ -13,9 +13,8 @@ declare(strict_types=1);
 
 namespace BrianFaust\Tests\Ark\API;
 
-use BrianFaust\Tests\Ark\TestCase;
 use BrianFaust\Ark\Client;
-use BrianFaust\Ark\Utils\Crypto;
+use BrianFaust\Tests\Ark\TestCase;
 
 /**
  * @coversNothing

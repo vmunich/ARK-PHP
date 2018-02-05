@@ -96,8 +96,8 @@ class Delegate extends AbstractAPI
     {
         return $this->post('peer/transactions', [
             'transactions' => [
-                $this->client->transactionBuilder->createDelegate($username, $secret, $secondSecret)
-            ]
+                $this->client->transactionBuilder->createDelegate($username, $secret, $secondSecret),
+            ],
         ]);
     }
 

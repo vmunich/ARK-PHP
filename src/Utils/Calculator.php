@@ -158,7 +158,7 @@ class Calculator
      *
      * @return \BrianFaust\Ark\Utils\Calculator
      */
-    public function withReward(int $value): Calculator
+    public function withReward(int $value): self
     {
         $this->reward = $value;
 
@@ -170,7 +170,7 @@ class Calculator
      *
      * @return \BrianFaust\Ark\Utils\Calculator
      */
-    public function withVotingPool(int $value): Calculator
+    public function withVotingPool(int $value): self
     {
         $this->votingPool = $value;
 
@@ -182,7 +182,7 @@ class Calculator
      *
      * @return \BrianFaust\Ark\Utils\Calculator
      */
-    public function withProfitShare($value): Calculator
+    public function withProfitShare($value): self
     {
         $this->profitShare = $value;
 
@@ -194,7 +194,7 @@ class Calculator
      *
      * @return \BrianFaust\Ark\Utils\Calculator
      */
-    public function withExcludedVotes(int $value): Calculator
+    public function withExcludedVotes(int $value): self
     {
         $this->excludedVotes = $value;
 
@@ -206,7 +206,7 @@ class Calculator
      *
      * @return \BrianFaust\Ark\Utils\Calculator
      */
-    public function coversFee(bool $value): Calculator
+    public function coversFee(bool $value): self
     {
         $this->coversFee = $value;
 

@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace BrianFaust\Tests\Ark\Utils;
 
-use BitWasp\Bitcoin\Network\NetworkInterface;
 use BrianFaust\Ark\Utils\Crypto;
 use BrianFaust\Tests\Ark\TestCase;
 

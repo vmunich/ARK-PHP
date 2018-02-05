@@ -39,8 +39,8 @@ class Signature extends AbstractAPI
     {
         return $this->post('peer/transactions', [
             'transactions' => [
-                $this->client->transactionBuilder->createSecondSignature($secondSecret, $secret)
-            ]
+                $this->client->transactionBuilder->createSecondSignature($secondSecret, $secret),
+            ],
         ]);
     }
 }

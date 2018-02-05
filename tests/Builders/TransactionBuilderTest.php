@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace BrianFaust\Tests\Ark\Builders;
 
-use BrianFaust\Ark\Builders\TransactionBuilder;
 use BrianFaust\Ark\Utils\Crypto;
 use BrianFaust\Tests\Ark\TestCase;
 
@@ -75,12 +74,12 @@ class TransactionBuilderTest extends TestCase
         $min = 2;
         $lifetime = 255;
         $keysgroup = [
-            "03a02b9d5fdd1307c2ee4652ba54d492d1fd11a7d1bb3f3a44c4a05e79f19de933",
-            "13a02b9d5fdd1307c2ee4652ba54d492d1fd11a7d1bb3f3a44c4a05e79f19de933",
-            "23a02b9d5fdd1307c2ee4652ba54d492d1fd11a7d1bb3f3a44c4a05e79f19de933"
+            '03a02b9d5fdd1307c2ee4652ba54d492d1fd11a7d1bb3f3a44c4a05e79f19de933',
+            '13a02b9d5fdd1307c2ee4652ba54d492d1fd11a7d1bb3f3a44c4a05e79f19de933',
+            '23a02b9d5fdd1307c2ee4652ba54d492d1fd11a7d1bb3f3a44c4a05e79f19de933',
         ];
 
-        $transaction = $this->getClient()->transactionBuilder->createMultiSignature($secret, $secondSecret, join('', $keysgroup), $lifetime, $min);
+        $transaction = $this->getClient()->transactionBuilder->createMultiSignature($secret, $secondSecret, implode('', $keysgroup), $lifetime, $min);
         $this->assertInstanceOf('stdClass', $transaction);
         $this->assertTrue(Crypto::verify($transaction));
     }
@@ -107,7 +106,7 @@ class TransactionBuilderTest extends TestCase
         $delegate = '034151a3ec46b5670a682b0a63394f863587d1bc97483b1b6c70eb58e7f0aed192';
 
         $client = $this->getClient();
-        $transaction = $client->transactionBuilder->createVote(['+' . $delegate], $secret,null, $client->network);
+        $transaction = $client->transactionBuilder->createVote(['+'.$delegate], $secret, null, $client->network);
         $this->assertInstanceOf('stdClass', $transaction);
         $this->assertTrue(Crypto::verify($transaction));
     }

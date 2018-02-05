@@ -14,9 +14,8 @@ declare(strict_types=1);
 namespace BrianFaust\Ark\Builders;
 
 use BitWasp\Buffertools\Buffer;
-use BrianFaust\Ark\Utils\Crypto;
 use BitWasp\Bitcoin\Crypto\Hash;
-use BitWasp\Bitcoin\Network;
+use BrianFaust\Ark\Utils\Crypto;
 
 class TransactionType
 {
@@ -64,8 +63,7 @@ class TransactionBuilder
 
         self::sign($transaction, $keys);
 
-        if ($secondSecret)
-        {
+        if ($secondSecret) {
             $secondKeys = Crypto::getKeys($secondSecret);
             self::secondSign($transaction, $secondKeys);
         }
@@ -73,7 +71,7 @@ class TransactionBuilder
         $idBytes = self::getBytes($transaction, false, false);
         $transaction->id = Hash::sha256(new Buffer($idBytes))->getHex();
 
-        if (!$transaction->signSignature) {
+        if (! $transaction->signSignature) {
             unset($transaction->signSignature);
         }
         unset($transaction->asset);
@@ -87,12 +85,13 @@ class TransactionBuilder
         $transaction->type = TransactionType::SECONDSIGNATURE;
         $transaction->amount = 0;
         $transaction->fee = TransactionFee::SECONDSIGNATURE;
-        $transaction->asset['signature'] = array('publicKey' => Crypto::getKeys($secondPassphrase)->getPublicKey()->getHex());
+        $transaction->asset['signature'] = ['publicKey' => Crypto::getKeys($secondPassphrase)->getPublicKey()->getHex()];
         $transaction->timestamp = self::getTimeSinceEpoch();
 
         $firstPassphraseKeys = Crypto::getKeys($firstPassphrase);
         $transaction->senderPublicKey = $firstPassphraseKeys->getPublicKey()->getHex();
         self::sign($transaction, $firstPassphraseKeys);
+
         return $transaction;
     }
 
@@ -111,8 +110,7 @@ class TransactionBuilder
         $transaction->senderPublicKey = $keys->getPublicKey()->getHex();
         self::sign($transaction, $keys);
 
-        if ($secondSecret)
-        {
+        if ($secondSecret) {
             $secondKeys = Crypto::getKeys($secondSecret);
             self::secondSign($transaction, $secondKeys);
         }
@@ -133,15 +131,14 @@ class TransactionBuilder
         $keys = Crypto::getKeys($secret);
         $transaction->senderPublicKey = $keys->getPublicKey()->getHex();
 
-        $transaction->asset['delegate'] = array(
+        $transaction->asset['delegate'] = [
             'username' => $username,
-            'publicKey' => $transaction->senderPublicKey
-        );
+            'publicKey' => $transaction->senderPublicKey,
+        ];
 
         self::sign($transaction, $keys);
 
-        if ($secondSecret)
-        {
+        if ($secondSecret) {
             $secondKeys = Crypto::getKeys($secondSecret);
             self::secondSign($transaction, $secondKeys);
         }
@@ -158,18 +155,17 @@ class TransactionBuilder
         $transaction->amount = 0;
         $transaction->fee = TransactionFee::MULTISIGNATURE;
         $transaction->timestamp = self::getTimeSinceEpoch();
-        $transaction->asset['multisignature'] = array(
+        $transaction->asset['multisignature'] = [
             'min' => $min,
             'lifetime' => $lifetime,
-            'keysgroup' => $keysgroup
-        );
+            'keysgroup' => $keysgroup,
+        ];
 
         $keys = Crypto::getKeys($secret);
         $transaction->senderPublicKey = $keys->getPublicKey()->getHex();
         self::sign($transaction, $keys);
 
-        if ($secondSecret)
-        {
+        if ($secondSecret) {
             $secondKeys = Crypto::getKeys($secondSecret);
             self::secondSign($transaction, $secondKeys);
         }
@@ -195,7 +191,8 @@ class TransactionBuilder
         $out->signSignature = null;
 
         $out->id = null;
-        $out->asset = array();
+        $out->asset = [];
+
         return $out;
     }
 
@@ -204,25 +201,21 @@ class TransactionBuilder
         $out = '';
         $out .= pack('h', $transaction->type);
         $out .= pack('V', $transaction->timestamp);
-        $out .= pack('H' . strlen($transaction->senderPublicKey), $transaction->senderPublicKey);
+        $out .= pack('H'.strlen($transaction->senderPublicKey), $transaction->senderPublicKey);
 
-        # TODO: requester public key
+        // TODO: requester public key
 
-        if ($transaction->recipientId)
-        {
+        if ($transaction->recipientId) {
             $out .= \BitWasp\Bitcoin\Base58::decodeCheck($transaction->recipientId)->getBinary();
-        } else
-        {
+        } else {
             $out .= pack('x21');
         }
 
-        if ($transaction->vendorField && strlen($transaction->vendorField) < 64)
-        {
+        if ($transaction->vendorField && strlen($transaction->vendorField) < 64) {
             $out .= $transaction->vendorField;
             $vendorFieldLength = strlen($transaction->vendorField);
-            if ($vendorFieldLength < 64)
-            {
-                $out .= pack('x' . (64 - $vendorFieldLength));
+            if ($vendorFieldLength < 64) {
+                $out .= pack('x'.(64 - $vendorFieldLength));
             }
         } else {
             $out .= pack('x64');
@@ -231,29 +224,26 @@ class TransactionBuilder
         $out .= pack('P', $transaction->amount);
         $out .= pack('P', $transaction->fee);
 
-        if ($transaction->type == TransactionType::SECONDSIGNATURE) // second signature
-        {
+        if ($transaction->type == TransactionType::SECONDSIGNATURE) { // second signature
             $assetSigPubKey = $transaction->asset['signature']['publicKey'];
-            $out .= pack('H' . strlen($assetSigPubKey), $assetSigPubKey);
-        } elseif ($transaction->type == TransactionType::DELEGATE)
-        {
+            $out .= pack('H'.strlen($assetSigPubKey), $assetSigPubKey);
+        } elseif ($transaction->type == TransactionType::DELEGATE) {
             $out .= $transaction->asset['delegate']['username'];
-        } elseif ($transaction->type == TransactionType::VOTE)
-        {
-            $out .= join('', $transaction->asset['votes']);
-        } elseif ($transaction->type == TransactionType::MULTISIGNATURE)
-        {
+        } elseif ($transaction->type == TransactionType::VOTE) {
+            $out .= implode('', $transaction->asset['votes']);
+        } elseif ($transaction->type == TransactionType::MULTISIGNATURE) {
             $out .= pack('C', $transaction->asset['multisignature']['min']);
             $out .= pack('C', $transaction->asset['multisignature']['lifetime']);
             $out .= $transaction->asset['multisignature']['keysgroup'];
         }
 
-        if(!$skipSignature && $transaction->signature){
-            $out .= pack('H' . strlen($transaction->signature), $transaction->signature);
+        if (! $skipSignature && $transaction->signature) {
+            $out .= pack('H'.strlen($transaction->signature), $transaction->signature);
         }
-        if(!$skipSecondSignature && $transaction->signSignature){
-            $out .= pack('H' . strlen($transaction->signSignature), $transaction->signSignature);
+        if (! $skipSecondSignature && $transaction->signSignature) {
+            $out .= pack('H'.strlen($transaction->signSignature), $transaction->signSignature);
         }
+
         return $out;
     }
 
@@ -271,6 +261,6 @@ class TransactionBuilder
 
     private function getTimeSinceEpoch()
     {
-        return time() - strtotime("2017-03-21 13:00:00");
+        return time() - strtotime('2017-03-21 13:00:00');
     }
 }
