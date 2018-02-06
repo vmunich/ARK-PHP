@@ -30,7 +30,7 @@ class TransactionBuilderTest extends TestCase
         $secret = 'this is a top secret passphrase';
 
         // Act...
-        $transaction = $this->getClient()->transactionBuilder->createNormal($recipientId, $amount, $vendorField, $secret);
+        $transaction = $this->getClient()->transactionBuilder->createTransfer($recipientId, $amount, $vendorField, $secret);
 
         // Assert...
         $this->assertInstanceOf('stdClass', $transaction);
@@ -48,7 +48,7 @@ class TransactionBuilderTest extends TestCase
         $secondSecret = 'this is a top secret second passphrase';
 
         // Act...
-        $transaction = $this->getClient()->transactionBuilder->createNormal($recipientId, $amount, $vendorField, $secret, $secondSecret);
+        $transaction = $this->getClient()->transactionBuilder->createTransfer($recipientId, $amount, $vendorField, $secret, $secondSecret);
 
         // Assert...
         $this->assertInstanceOf('stdClass', $transaction);

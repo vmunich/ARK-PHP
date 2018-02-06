@@ -19,7 +19,7 @@ use BrianFaust\Ark\Utils\Crypto;
 
 class TransactionType
 {
-    const NORMAL = 0;
+    const TRANSFER = 0;
     const SECONDSIGNATURE = 1;
     const DELEGATE = 2;
     const VOTE = 3;
@@ -28,7 +28,7 @@ class TransactionType
 
 class TransactionFee
 {
-    const NORMAL = 10000000;
+    const TRANSFER = 10000000;
     const SECONDSIGNATURE = 500000000;
     const DELEGATE = 2500000000;
     const VOTE = 100000000;
@@ -48,13 +48,13 @@ class TransactionBuilder
      *
      * @return \Illuminate\Support\Collection
      */
-    public function createNormal(string $recipientId, int $amount, string $vendorField, string $secret, ?string $secondSecret = null)
+    public function createTransfer(string $recipientId, int $amount, string $vendorField, string $secret, ?string $secondSecret = null)
     {
         $transaction = self::createEmptyTransaction();
         $transaction->recipientId = $recipientId;
-        $transaction->type = TransactionType::NORMAL;
+        $transaction->type = TransactionType::TRANSFER;
         $transaction->amount = $amount;
-        $transaction->fee = TransactionFee::NORMAL;
+        $transaction->fee = TransactionFee::TRANSFER;
         $transaction->vendorField = $vendorField;
         $transaction->timestamp = self::getTimeSinceEpoch();
 
