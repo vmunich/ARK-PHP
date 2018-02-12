@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace BrianFaust\Ark\Utils;
 
-use BrianFaust\Ark\Exceptions\VoteWeightExceeded;
 use BrianFaust\Ark\Exceptions\ProfitShareExceeded;
+use BrianFaust\Ark\Exceptions\VoteWeightExceeded;
 
 class Calculator
 {
@@ -110,7 +110,7 @@ class Calculator
 
         $result = $this->reward * $profitShare * $this->voteWeight($value);
 
-        if (! $this->coversFee) {
+        if (!$this->coversFee) {
             return $result - ($this->fee / $this->fixedPoint);
         }
 

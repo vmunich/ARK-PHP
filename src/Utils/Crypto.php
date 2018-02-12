@@ -13,16 +13,16 @@ declare(strict_types=1);
 
 namespace BrianFaust\Ark\Utils;
 
-use BitWasp\Buffertools\Buffer;
+use BitWasp\Bitcoin\Address\PayToPubKeyHashAddress;
+use BitWasp\Bitcoin\Crypto\EcAdapter\Impl\PhpEcc\Key\PrivateKey;
 use BitWasp\Bitcoin\Crypto\Hash;
-use BrianFaust\Ark\TransactionBuilder;
-use BitWasp\Bitcoin\Key\PublicKeyFactory;
 use BitWasp\Bitcoin\Key\PrivateKeyFactory;
+use BitWasp\Bitcoin\Key\PublicKeyFactory;
 use BitWasp\Bitcoin\Network\NetworkFactory;
 use BitWasp\Bitcoin\Network\NetworkInterface;
 use BitWasp\Bitcoin\Signature\SignatureFactory;
-use BitWasp\Bitcoin\Address\PayToPubKeyHashAddress;
-use BitWasp\Bitcoin\Crypto\EcAdapter\Impl\PhpEcc\Key\PrivateKey;
+use BitWasp\Buffertools\Buffer;
+use BrianFaust\Ark\TransactionBuilder;
 
 class Crypto
 {
@@ -77,7 +77,7 @@ class Crypto
     {
         $publicKey = $privateKey->getPublicKey();
         $digest = Hash::ripemd160(new Buffer($publicKey->getBinary()));
-        if (! $network) {
+        if (!$network) {
             $network = NetworkFactory::create('17', '00', '00');
         }
 
@@ -111,6 +111,7 @@ class Crypto
      * https://stackoverflow.com/questions/1273484/large-hex-values-with-php-hexdec.
      *
      * @param $hex
+     *
      * @return int|string
      */
     private static function bchexdec(string $hex)

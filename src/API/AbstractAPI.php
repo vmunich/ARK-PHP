@@ -14,10 +14,10 @@ declare(strict_types=1);
 namespace BrianFaust\Ark\API;
 
 use BrianFaust\Ark\Client;
-use BrianFaust\Http\HttpResponse;
-use Illuminate\Support\Collection;
-use BrianFaust\Http\PendingHttpRequest;
 use BrianFaust\Ark\Exceptions\InvalidResponseException;
+use BrianFaust\Http\HttpResponse;
+use BrianFaust\Http\PendingHttpRequest;
+use Illuminate\Support\Collection;
 
 abstract class AbstractAPI
 {
@@ -34,7 +34,7 @@ abstract class AbstractAPI
     /**
      * Create a new API class instance.
      *
-     * @param \BrianFaust\Ark\Client $client
+     * @param \BrianFaust\Ark\Client              $client
      * @param \BrianFaust\Http\PendingHttpRequest $http
      */
     public function __construct(Client $client, PendingHttpRequest $http)
@@ -90,7 +90,7 @@ abstract class AbstractAPI
     {
         $body = $response->json();
 
-        if (! $body['success']) {
+        if (!$body['success']) {
             throw new InvalidResponseException($body['error']);
         }
 

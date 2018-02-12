@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace BrianFaust\Ark;
 
-use BitWasp\Buffertools\Buffer;
 use BitWasp\Bitcoin\Crypto\Hash;
+use BitWasp\Buffertools\Buffer;
 use BrianFaust\Ark\Utils\Crypto;
 
 class TransactionType
@@ -71,7 +71,7 @@ class TransactionBuilder
         $idBytes = self::getBytes($transaction, false, false);
         $transaction->id = Hash::sha256(new Buffer($idBytes))->getHex();
 
-        if (! $transaction->signSignature) {
+        if (!$transaction->signSignature) {
             unset($transaction->signSignature);
         }
         unset($transaction->asset);
@@ -132,7 +132,7 @@ class TransactionBuilder
         $transaction->senderPublicKey = $keys->getPublicKey()->getHex();
 
         $transaction->asset['delegate'] = [
-            'username' => $username,
+            'username'  => $username,
             'publicKey' => $transaction->senderPublicKey,
         ];
 
@@ -156,8 +156,8 @@ class TransactionBuilder
         $transaction->fee = (count($keysgroup) + 1) * TransactionFee::MULTISIGNATURE;
         $transaction->timestamp = self::getTimeSinceEpoch();
         $transaction->asset['multisignature'] = [
-            'min' => $min,
-            'lifetime' => $lifetime,
+            'min'       => $min,
+            'lifetime'  => $lifetime,
             'keysgroup' => $keysgroup,
         ];
 
@@ -237,10 +237,10 @@ class TransactionBuilder
             $out .= implode('', $transaction->asset['multisignature']['keysgroup']);
         }
 
-        if (! $skipSignature && $transaction->signature) {
+        if (!$skipSignature && $transaction->signature) {
             $out .= pack('H'.strlen($transaction->signature), $transaction->signature);
         }
-        if (! $skipSecondSignature && $transaction->signSignature) {
+        if (!$skipSecondSignature && $transaction->signSignature) {
             $out .= pack('H'.strlen($transaction->signSignature), $transaction->signSignature);
         }
 

@@ -48,7 +48,7 @@ class MultiSignature extends AbstractAPI
      *
      * @param string $secret
      * @param string $secondSecret
-     * @param array $keysgroup
+     * @param array  $keysgroup
      * @param int    $lifetime
      * @param int    $min
      *

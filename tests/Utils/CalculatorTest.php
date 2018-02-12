@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace BrianFaust\Tests\Ark\Utils;
 
-use BrianFaust\Tests\Ark\TestCase;
 use BrianFaust\Ark\Utils\Calculator;
+use BrianFaust\Tests\Ark\TestCase;
 
 /**
  * @coversNothing

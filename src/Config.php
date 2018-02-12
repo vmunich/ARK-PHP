@@ -41,11 +41,11 @@ class Config
     /**
      * Create a new Ark client instance.
      *
-     * @param string $protocol
-     * @param string $ip
-     * @param int    $port
-     * @param string $nethash
-     * @param string $version
+     * @param string                                  $protocol
+     * @param string                                  $ip
+     * @param int                                     $port
+     * @param string                                  $nethash
+     * @param string                                  $version
      * @param \BitWasp\Bitcoin\Network\NetworkFactory $networkAddress
      */
     public function __construct(string $protocol, string $ip, int $port, string $nethash, string $version, string $networkAddress)
