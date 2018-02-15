@@ -8,6 +8,7 @@
 
 [![StyleCI](https://styleci.io/repos/113013419/shield?branch=master)](https://styleci.io/repos/113013419)
 [![Build Status](https://img.shields.io/travis/faustbrian/ARK-PHP/master.svg?style=flat)](https://travis-ci.org/faustbrian/ARK-PHP)
+[![PHP from Packagist](https://img.shields.io/packagist/php-v/faustbrian/ark-php.svg)]()
 [![Latest Version](https://img.shields.io/github/release/faustbrian/ARK-PHP.svg?style=flat)](https://github.com/faustbrian/ARK-PHP/releases)
 [![License](https://img.shields.io/packagist/l/faustbrian/ARK-PHP.svg?style=flat)](https://packagist.org/packages/faustbrian/ARK-PHP)
 
