@@ -104,9 +104,9 @@ class Delegate extends AbstractAPI
     /**
      * @return \Illuminate\Support\Collection
      */
-    public function nextForgers(): Collection
+    public function nextForgers(int $limit = null): Collection
     {
-        return $this->get('api/delegates/getNextForgers');
+        return $this->get('api/delegates/getNextForgers', compact('limit'));
     }
 
     /**
