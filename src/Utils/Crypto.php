@@ -47,12 +47,12 @@ class Crypto
     }
 
     /**
-     * Validate an ARK Address
+     * Validate an ARK Address.
      *
      * @param string $address
      * @param string $networkVersion
      *
-     * @return boolean
+     * @return bool
      */
     public static function validateAddress(string $address, string $networkVersion = '17')
     {
