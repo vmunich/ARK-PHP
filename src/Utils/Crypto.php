@@ -47,6 +47,26 @@ class Crypto
     }
 
     /**
+     * Validate an ARK Address.
+     *
+     * @param string $address
+     * @param string $networkVersion
+     *
+     * @return bool
+     */
+    public static function validateAddress(string $address, string $networkVersion = '17')
+    {
+        // Base58 decode the address
+        $address = new Buffer(Base58::decode($address));
+
+        // Get the network version
+        $prefixByte = $address->slice(0, 1)->getHex();
+
+        // Compare address' network version with given $networkVersion
+        return $prefixByte === $networkVersion;
+    }
+
+    /**
      * Compute an WIF address from the given secret.
      *
      * @param string $secret
