@@ -1,5 +1,5 @@
 {
-    "name": "faustbrian/ark-php",
+    "name": "vmunich/ark-php",
     "description": "An ARK bridge for PHP.",
     "keywords": ["api", "ark", "crypto", "currency"],
     "license": "MIT",
